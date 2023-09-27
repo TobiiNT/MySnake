@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Bussiness
+namespace MySnake
 {
     public class Render
     {
@@ -22,14 +22,14 @@ namespace Bussiness
                     gp.AddLine(p.X + Width - (Radius * 2), p.Y + Width, p.X + Radius, p.Y + Width);
                     gp.AddArc(p.X, p.Y + Width - (Radius * 2), Radius * 2, Radius * 2, 90, 90);
                     gp.AddLine(p.X, p.Y + Width - (Radius * 2), p.X, p.Y + Radius);
-                    gp.AddArc(p.X, p.Y, Radius * 2, Radius * 2, 180, 90);                    
+                    gp.AddArc(p.X, p.Y, Radius * 2, Radius * 2, 180, 90);
 
                     gp.CloseFigure();
                     g.FillPath(brush, gp);
                     g.DrawPath(pen, gp);
                     gp.Dispose();
                 }
-                
+
             }
             catch { }
         }

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Bussiness
+namespace MySnake
 {
     public class BFSAlgorithm
     {
