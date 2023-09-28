@@ -22,7 +22,7 @@ namespace GameCore.Entities
                 SetCellValue(Cells[i], type);
             }
         }
-        public void ChangeCellType(List<Point> Cells, CellType type)
+        public void ChangeCellsType(List<Point> Cells, CellType type)
         {
             // This is only used for the snake so skip the snake's head at cells[0]
             foreach (Point Location in Cells)
@@ -34,6 +34,11 @@ namespace GameCore.Entities
         public void ChangeCellType(Point cell, CellType type)
         {
             SetCellValue(cell, type);
+        }
+
+        public void ChangeCellType(Point? cell, CellType type)
+        {
+            if (cell != null) SetCellValue((Point)cell, type);
         }
 
         public bool IsCellAvailable(Point cell)

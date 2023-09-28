@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BFSAlgorithm.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -55,6 +56,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Render.cs" />
     <Compile Include="Snake.cs" />
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -83,10 +85,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Bussiness\Bussiness.csproj">
-      <Project>{258fe073-dcfb-44ce-a59b-7d656ab60a0e}</Project>
-      <Name>Bussiness</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GameCore\GameCore.csproj">
       <Project>{C0EC034F-2850-4A40-9D14-70A4A2E78CBF}</Project>
       <Name>GameCore</Name>

@@ -9,7 +9,13 @@ namespace GameCore.Entities
 {
     public class Snake2 : ISnake
     {
+        public ISnakeBody Head => Bodies[0];
+
+        public ISnakeBody Tail => Bodies[Length - 1];
+
         public List<ISnakeBody> Bodies { private set; get; }
+
+        public int Length => this.Bodies.Count;
 
         public SnakeState State { private set; get; }
 
@@ -23,6 +29,8 @@ namespace GameCore.Entities
 
         public int PendingBodies { private set; get; }
 
+        public DateTime LastMoveTime { private set; get; }
+
         public int BorderWidth => 5;
 
         public Pen Border { private set; get; }
@@ -31,12 +39,32 @@ namespace GameCore.Entities
 
         public event EventHandler<EventArgs> OnDisposed;
 
-        public Snake2()
+        public Snake2(int X, int Y, Direction Direction, int StartLength)
         {
             this.Bodies = new List<ISnakeBody>();
             this.State = SnakeState.IDLE;
-            this.Direction = Direction.RIGHT;
+            this.Direction = Direction;
             this.PendingBodies = 0;
+            this.LastMoveTime = DateTime.Now;
+
+            this.Bodies.Add(new SnakeHead(this, X, Y));
+            for (int i = 1; i <= StartLength; i++)
+            {
+                switch (Direction)
+                {
+                    case Direction.LEFT: X++; break;
+                    case Direction.RIGHT: X--; break;
+                    case Direction.UP: Y++; break;
+                    case Direction.DOWN: Y--; break;
+                }
+                this.Bodies.Add(new SnakeBody(this, X, Y));
+            }
+        }
+
+        public void SetColor(Color Border, Color Body)
+        {
+            this.Border = new Pen(Border);
+            this.Color = new SolidBrush(Body);
         }
 
         public void AddLength(int Length)
@@ -60,6 +88,7 @@ namespace GameCore.Entities
         public void ChangeSpeed(int Speed)
         {
             if (Speed > 0) this.MoveSpeed = Speed;
+            this.AddLength(1);
         }
 
         public void ChangeState(SnakeState State)
@@ -70,14 +99,29 @@ namespace GameCore.Entities
         public void Move()
         {
             if (State != SnakeState.MOVING) return;
+            if (this.LastMoveTime.AddMilliseconds(this.MoveSpeed) > DateTime.Now) return;
+            this.LastMoveTime = DateTime.Now;
 
-            // Adds any pending body parts. Note that this processes one body part at a time;
-            // if PendingBodies > 1, it will require more than one frame to process completely.
-            if (this.PendingBodies > 0)
+            Point LastTailPosition = this.Tail.Position;
+            for (int i = Length - 1; i > 0; i--)
             {
-                ISnakeBody Tail = this.Bodies.Last(); // Adds the body part to the tail
-                this.Bodies.Add(new SnakeBody(this, Tail.Position.X, Tail.Position.Y));
-                this.PendingBodies--;
+                ISnakeBody Part = this.Bodies[i];
+                ISnakeBody NextPart = this.Bodies[i - 1];
+                Part.MoveTo(NextPart.Position);
+            }
+            if (this.Direction == Direction.LEFT)
+                this.Head.MoveTo(new Point(this.Head.Position.X - 1, this.Head.Position.Y));
+            else if (this.Direction == Direction.RIGHT)
+                this.Head.MoveTo(new Point(this.Head.Position.X + 1, this.Head.Position.Y));
+            if (this.Direction == Direction.UP)
+                this.Head.MoveTo(new Point(this.Head.Position.X, this.Head.Position.Y - 1));
+            else if (this.Direction == Direction.DOWN)
+                this.Head.MoveTo(new Point(this.Head.Position.X, this.Head.Position.Y + 1));
+         
+            if (PendingBodies > 0)
+            {
+                PendingBodies--;
+                Bodies.Add(new SnakeBody(this, LastTailPosition.X, LastTailPosition.Y));
             }
 
             if (IsSelfCollision()) // Check for collisions with itself

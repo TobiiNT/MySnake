@@ -45,6 +45,7 @@
     <Compile Include="Entities\Enums\CellType.cs" />
     <Compile Include="Entities\Enums\SnakeState.cs" />
     <Compile Include="Entities\Enums\Direction.cs" />
+    <Compile Include="Entities\SnakeHead.cs" />
     <Compile Include="Entities\SnakeBody.cs" />
     <Compile Include="Entities\Interfaces\ISnakeBody.cs" />
     <Compile Include="Entities\Interfaces\ISnake.cs" />

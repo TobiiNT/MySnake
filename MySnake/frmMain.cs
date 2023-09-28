@@ -20,12 +20,13 @@ namespace MySnake
         public List<Obstacle> Obstacles;
         public List<Food> Foods;
 
-        public Snake Player_Snake;
+        public Snake2 PlayerSnake;
         public List<Snake> SnakeList;
 
         public Map Board;
         private object LockObject = new object();
-        public System.Timers.Timer Timer;
+
+        private Thread MainThread;
 
         public frmMain()
         {
@@ -40,6 +41,25 @@ namespace MySnake
             this.Obstacles = MapLoader.Load("level1.lev").OfType<Obstacle>().ToList();
 
             Reset();
+
+            this.MainThread = new Thread(new ThreadStart(this.GameLoop));
+            this.MainThread.Start();
+        }
+
+        private void GameLoop()
+        {
+            while (true)
+            {
+                this.PlayerSnake?.Move();
+                this.DrawSnake(PlayerSnake);
+                foreach (var Bot in SnakeList)
+                {
+                    Bot.Move();
+                }
+
+                this.MainPanel.Invalidate();
+                Thread.Sleep(1000 / Constants.FPS);
+            }
         }
 
 
@@ -82,52 +102,42 @@ namespace MySnake
 
             this.SnakeList = new List<Snake>();
 
-            if (this.Player_Snake != null)
+            if (this.PlayerSnake != null)
             {
-                this.Player_Snake.Dispose();
+                this.PlayerSnake.Dispose();
             }
-            this.Player_Snake = new Snake("Player", this.Graphic, Get_Random_Position(), 100);
-            this.Player_Snake.Snake_Control += new Snake.SnakeControl(SnakeLogic);
 
-            if (this.SnakeList.Count > 0)
-            {
-                this.SnakeList.Clear();
-            }
-            for (int i = 0; i < 2; i++)
-            {
-                Snake newSnake = new Snake($"Computer {i}", this.Graphic, Get_Random_Position(), 100, true);
-                newSnake.Snake_Control += new Snake.SnakeControl(SnakeLogic);
-                newSnake.Snake_FindPath += new Snake.FindPath(Caculate_Path);
-                this.Board.ChangeCellType(newSnake.Bodies, CellType.OBSTACLE);
-                this.SnakeList.Add(newSnake);
-                Thread.Sleep(2);
-            }
+            var Position = Get_Random_Position();
+            this.PlayerSnake = new Snake2(Position.X, Position.Y, Direction.RIGHT, 3);
+            this.PlayerSnake.SetColor(Color.Black, Color.Blue);
+            //this.PlayerSnake.Snake_Control += new Snake.SnakeControl(SnakeLogic);
+            this.DrawSnake(PlayerSnake);
+
+            //if (this.SnakeList.Count > 0)
+            //{
+            //    this.SnakeList.Clear();
+            //}
+            //for (int i = 0; i < 2; i++)
+            //{
+            //    Snake newSnake = new Snake($"Computer {i}", this.Graphic, Get_Random_Position(), 500, true);
+            //    newSnake.Snake_Control += new Snake.SnakeControl(SnakeLogic);
+            //    newSnake.Snake_FindPath += new Snake.FindPath(Caculate_Path);
+            //    this.Board.ChangeCellsType(newSnake.Bodies.Select(s => s.Position).ToList(), CellType.OBSTACLE);
+            //    this.SnakeList.Add(newSnake);
+            //    Thread.Sleep(2);
+            //}
 
             foreach (var Obstacle in this.Obstacles)
             {
                 this.Board.ChangeCellType(Obstacle.Position, CellType.OBSTACLE);
             }
-            this.Board.ChangeCellType(this.Player_Snake.Bodies, CellType.OBSTACLE);
+            this.Board.ChangeCellsType(this.PlayerSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
             this.AddNewFood();
             this.AddNewFood();
 
             lock (this.LockObject)
             {
                 this.Graphic.Clear(Color.White);
-            }
-
-            foreach (IGameObject Object in this.Obstacles)
-            {
-                Render.Draw(this.Graphic, Object);
-            }
-            this.Player_Snake.Draw();
-            foreach (Snake snake in this.SnakeList)
-            {
-                snake.Draw();
-            }
-            foreach (IGameObject Food in this.Foods)
-            {
-                Render.Draw(this.Graphic, Food);
             }
         }
 
@@ -140,12 +150,11 @@ namespace MySnake
             return position;
         }
 
-        public void SnakeLogic(Snake CurrentSnake, Point[] Position, Point Tail, bool IsPlayer)
+        public void SnakeLogic(Snake CurrentSnake, List<ISnakeBody> OldSnake, List<ISnakeBody> NewSnake)
         {
-            this.Board.ChangeCellType(Position, CellType.OBSTACLE);
-            this.Board.ChangeCellType(Tail, CellType.EMPTY);
+            //this.Board.ChangeCellsType(OldSnake, CellType.EMPTY);
 
-            CellType temp = this.Board.GetCellType(Position[0]);
+            CellType temp = this.Board.GetCellType(NewSnake.First().Position);
 
             if (temp == CellType.OBSTACLE) //đụng vật cản
             {
@@ -153,14 +162,16 @@ namespace MySnake
             }
             else if (temp == CellType.FOOD)
             {
-                foreach (Food Food in this.Foods.Where(f => f.Position == Position[0]))
+                foreach (Food Food in this.Foods.Where(f => f.Position == NewSnake[0].Position).ToList())
                 {
                     Food.Dispose();
+                    CurrentSnake.AddLength(1);
+                    this.AddNewFood();
                 }
-                CurrentSnake.AddLength();
-
-                this.AddNewFood();
             }
+
+            this.Board.ChangeCellsType(OldSnake.Select(i => i.Position).ToList(), CellType.EMPTY);
+            this.Board.ChangeCellsType(NewSnake.Select(i => i.Position).ToList(), CellType.OBSTACLE);
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
@@ -173,11 +184,19 @@ namespace MySnake
             {
                 Render.Draw(this.Graphic, Object);
             }
-            this.Player_Snake.Draw();
+            this.DrawSnake(PlayerSnake);
             foreach (Snake snake in this.SnakeList)
             {
                 snake.Draw();
             }
+        }
+
+        private void DrawSnake(ISnake Snake)
+        {
+            Render.Draw(this.Graphic, new Point(Snake.Head.Position.X * Constants.Block_Size, Snake.Head.Position.Y * Constants.Block_Size), Snake.Head.Border, Snake.Head.Color);
+            for (int i = 1; i < Snake.Length; i++)
+                Render.Draw(this.Graphic, new Point(Snake.Bodies[i].Position.X * Constants.Block_Size, Snake.Bodies[i].Position.Y * Constants.Block_Size), Snake.Bodies[i].Border, Snake.Bodies[i].Color);
+
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -186,33 +205,20 @@ namespace MySnake
             switch (keyData)
             {
                 case Keys.D:
-                    if (this.Player_Snake.Movement != Direction.LEFT)
-                    {
-                        this.Player_Snake.Movement = Direction.RIGHT;
-                        bHandled = true;
-                    }
-
+                    this.PlayerSnake.ChangeDirection(Direction.RIGHT);
+                    bHandled = true;
                     break;
                 case Keys.A:
-                    if (this.Player_Snake.Movement != Direction.RIGHT)
-                    {
-                        this.Player_Snake.Movement = Direction.LEFT;
-                        bHandled = true;
-                    }
+                    this.PlayerSnake.ChangeDirection(Direction.LEFT);
+                    bHandled = true;
                     break;
                 case Keys.W:
-                    if (this.Player_Snake.Movement != Direction.DOWN)
-                    {
-                        this.Player_Snake.Movement = Direction.UP;
-                        bHandled = true;
-                    }
+                    this.PlayerSnake.ChangeDirection(Direction.UP);
+                    bHandled = true;
                     break;
                 case Keys.S:
-                    if (this.Player_Snake.Movement != Direction.UP)
-                    {
-                        this.Player_Snake.Movement = Direction.DOWN;
-                        bHandled = true;
-                    }
+                    this.PlayerSnake.ChangeDirection(Direction.DOWN);
+                    bHandled = true;
                     break;
             }
             return bHandled;
@@ -220,34 +226,31 @@ namespace MySnake
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (this.Player_Snake.IsMoving)
+            if (this.PlayerSnake.State == SnakeState.MOVING)
             {
-                this.Player_Snake.UpdateMovingState(false);
+                this.PlayerSnake.ChangeState(SnakeState.IDLE);
             }
-            else
+            else if (this.PlayerSnake.State == SnakeState.IDLE)
             {
-                this.Player_Snake.UpdateMovingState(true);
+                this.PlayerSnake.ChangeState(SnakeState.MOVING);
             }
         }
 
         public void UpdateStatus()
         {
-            if (this.Player_Snake != null)
-                this.lblPlayer_Score.Text = $"Điểm của người chơi: {this.Player_Snake.Length - Constants.Snake_Default_Size}";
+            if (this.PlayerSnake != null)
+                this.lblPlayer_Score.Text = $"Điểm của người chơi: {this.PlayerSnake.Length - Constants.Snake_Default_Size}";
 
 
             this.table_Score.Items.Clear();
 
             foreach (Snake snake in this.SnakeList)
             {
-                if (!snake.isDisposed)
-                {
-                    string[] items = new string[3];
-                    items[0] = snake.isDisposed.ToString();
-                    items[1] = $"{snake.Length - Constants.Snake_Default_Size}";
+                string[] items = new string[3];
+                items[0] = snake.State.ToString();
+                items[1] = $"{snake.Length - Constants.Snake_Default_Size}";
 
-                    this.table_Score.Items.Insert(this.table_Score.Items.Count, new ListViewItem(items));
-                }
+                this.table_Score.Items.Insert(this.table_Score.Items.Count, new ListViewItem(items));
             }
 
         }
@@ -259,7 +262,7 @@ namespace MySnake
 
         public void Caculate_Path(Snake Current_Snake)
         {
-            BFSAlgorithm algorithm = new BFSAlgorithm(this.Board, Current_Snake.Bodies[1]);
+            BFSAlgorithm algorithm = new BFSAlgorithm(this.Board, Current_Snake.Bodies[1].Position);
             Current_Snake.Computer_Path = algorithm.FindPath();
             if (Current_Snake.Computer_Path == null)
             {
@@ -282,16 +285,16 @@ namespace MySnake
             foreach (Snake snake in this.SnakeList)
             {
                 this.Caculate_Path(snake);
-                snake.UpdateMovingState(true);
+                snake.ChangeState(SnakeState.MOVING);
             }
         }
 
         private void numberColumnAndRow_ValueChanged(object sender, EventArgs e)
         {
-            this.Player_Snake.UpdateMoveSpeed((int)this.numberColumnAndRow.Value);
+            this.PlayerSnake.ChangeSpeed((int)this.numberColumnAndRow.Value);
             foreach (Snake snake in this.SnakeList)
             {
-                snake.UpdateMoveSpeed((int)this.numberColumnAndRow.Value);
+                snake.ChangeSpeed((int)this.numberColumnAndRow.Value);
             }
         }
     }

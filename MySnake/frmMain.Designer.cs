@@ -120,7 +120,7 @@
             this.numberColumnAndRow.Size = new System.Drawing.Size(112, 27);
             this.numberColumnAndRow.TabIndex = 9;
             this.numberColumnAndRow.Value = new decimal(new int[] {
-            50,
+            500,
             0,
             0,
             0});

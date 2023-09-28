@@ -1,54 +1,53 @@
-﻿using GameCore.Entities.Enums;
+﻿using GameCore.Entities;
+using GameCore.Entities.Enums;
+using GameCore.Entities.Interfaces;
 using GameCore.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Timers;
 
 namespace MySnake
 {
     public class Snake
     {
-        public Point[] Bodies { private set; get; }
+        public List<ISnakeBody> Bodies { private set; get; }
+        public ISnakeBody Head
+        {
+            set { this.Bodies[0] = value; }
+            get { return this.Bodies[0]; }
+        }
+        public ISnakeBody Tail
+        {
+            set { this.Bodies[this.Length - 1] = value; }
+            get { return this.Bodies[this.Length - 1]; }
+        }
+        public int Length => this.Bodies.Count;
+        public Direction Direction { private set; get; }
+
+        public SnakeState State { private set; get; }
 
         public string Name { private set; get; }
 
         public Graphics Graphic { private set; get; }
 
-        public int Length { private set; get; }
-
         public int MoveSpeed { private set; get; }
-
-        public bool IsMoving { private set; get; }
 
         public bool IsBot { private set; get; }
 
         private Brush Color { set; get; }
+        private int PendingBodies { set; get; }
 
-        private Timer MainTimer { set; get; }
-
-        public Direction Movement { get; set; } = Direction.RIGHT;
-
-
-        public bool isDisposed = false;
+        private DateTime LastMove { set; get; }
 
         public List<Point> Computer_Path = new List<Point>();
 
-        public delegate void SnakeControl(Snake snake, Point[] Position, Point Tail, bool Computer);
+        public delegate void SnakeControl(Snake snake, List<ISnakeBody> OldSnake, List<ISnakeBody> NewSnake);
         public event SnakeControl Snake_Control;
 
         public delegate void FindPath(Snake snake);
         public event FindPath Snake_FindPath;
-
-        public Point Head
-        {
-            set { this.Bodies[1] = value; }
-            get { return this.Bodies[1]; }
-        }
-        public Point Tail 
-        {
-            set { this.Bodies[this.Length] = value; }
-            get { return this.Bodies[this.Length]; }
-        }
 
         public Snake(string Name, Graphics Graphic, Point HeadPosition, int MoveSpeed, bool IsBot = false)
         {
@@ -56,123 +55,136 @@ namespace MySnake
             this.Graphic = Graphic;
             this.Color = Randomizer.GetRandomObjectInEnums<Brush>(typeof(Brushes));
             this.IsBot = IsBot;
-            this.Length = Constants.Snake_Default_Size;
+            this.State = SnakeState.IDLE;
+            this.Direction = Direction.RIGHT;
+            this.LastMove = DateTime.Now;
 
-            this.Bodies = new Point[1000];
-            for (int i = this.Length; i > 0; i--)
-                Bodies[i] = new Point(HeadPosition.X - i, HeadPosition.Y);
+            this.Bodies = new List<ISnakeBody>();
+            for (int i = Constants.Snake_Default_Size; i > 0; i--)
+                Bodies.Add(new SnakeBody(null, HeadPosition.X + i, HeadPosition.Y));
 
             this.MoveSpeed = MoveSpeed;
-            this.MainTimer = new Timer(this.MoveSpeed);
-            this.MainTimer.Enabled = false;
-            this.MainTimer.Elapsed += new ElapsedEventHandler(MoveTimer);
-            this.IsMoving = false;
-        }
-
-        private void MoveTimer(object sender, ElapsedEventArgs e)
-        {
-            this.Move();
         }
 
         public void Move()
         {
-            if (this.IsMoving)
+            if (this.State != SnakeState.MOVING) return;
+            if (this.LastMove.AddMilliseconds(this.MoveSpeed) > DateTime.Now) return;
+            this.LastMove = DateTime.Now;
+
+            Render.Draw(this.Graphic, new Point(this.Tail.Position.X * Constants.Block_Size, this.Tail.Position.Y * Constants.Block_Size), Constants.Background_Border, Constants.Background_Color);
+
+            List<ISnakeBody> OldBodies = this.Bodies.ToList();
+            List<ISnakeBody> NewBodies = new List<ISnakeBody>();
+            if (this.Direction == Direction.LEFT)
+                NewBodies.Add(new SnakeBody(null, this.Head.Position.X - 1, this.Head.Position.Y));
+            else if (this.Direction == Direction.RIGHT)
+                NewBodies.Add(new SnakeBody(null, this.Head.Position.X + 1, this.Head.Position.Y));
+            if (this.Direction == Direction.UP)
+                NewBodies.Add(new SnakeBody(null, this.Head.Position.X, this.Head.Position.Y - 1));
+            else if (this.Direction == Direction.DOWN)
+                NewBodies.Add(new SnakeBody(null, this.Head.Position.X, this.Head.Position.Y + 1));
+
+            foreach (var Part in this.Bodies.GetRange(0, this.Length - 1))
             {
-                Render.Draw(this.Graphic, new Point(this.Tail.X * Constants.Block_Size, this.Tail.Y * Constants.Block_Size), Constants.Background_Border, Constants.Background_Color);
+                NewBodies.Add(Part);
+            }
+            if (PendingBodies > 0)
+            {
+                PendingBodies--;
+                NewBodies.Add(Tail);
+            }
 
-                for (int i = this.Length; i > 1; i--)
+            for (int i = 0; i < NewBodies.Count; i++)
+            {
+                if (i == 0)
                 {
-                    this.Bodies[i] = this.Bodies[i - 1];
-                    Render.Draw(this.Graphic, new Point(this.Bodies[i].X * Constants.Block_Size, this.Bodies[i].Y * Constants.Block_Size), Constants.Snake_Border, this.Color);
+                    Render.Draw(this.Graphic, new Point(NewBodies[i].Position.X * Constants.Block_Size, NewBodies[i].Position.Y * Constants.Block_Size), Constants.Snake_Border, Constants.Snake_Head);
                 }
-
-                if (this.Movement == Direction.LEFT)
-                    this.Head = new Point(this.Head.X - 1, this.Head.Y);
-                else if (this.Movement == Direction.RIGHT)
-                    this.Head = new Point(this.Head.X + 1, this.Head.Y);
-                if (this.Movement == Direction.UP)
-                    this.Head = new Point(this.Head.X, this.Head.Y - 1);
-                else if (this.Movement == Direction.DOWN)
-                    this.Head = new Point(this.Head.X, this.Head.Y + 1);
-
-                Render.Draw(this.Graphic, new Point(this.Head.X * Constants.Block_Size, this.Head.Y * Constants.Block_Size), Constants.Snake_Border, Constants.Snake_Head);
-
-                if (Snake_Control != null)
+                else
                 {
-                    Point[] _NewSnake = new Point[this.Length];
-                    for (int i = 1; i <= this.Length; i++)
-                        _NewSnake[i - 1] = this.Bodies[i];
-                    Snake_Control(this, _NewSnake, Tail, this.IsBot);
-                }
-
-                if (this.IsBot)
-                {
-                    Snake_FindPath(this);
-                    if (this.Computer_Path != null)
-                    {
-                        if (this.Computer_Path.Count > 0)
-                        {
-                            Point NextStep = this.Computer_Path[this.Computer_Path.Count - 1];
-                            this.Computer_Path.RemoveAt(this.Computer_Path.Count - 1);
-                            if (this.Head.X > NextStep.X)
-                                this.Movement = Direction.LEFT;
-                            else if (this.Head.X < NextStep.X)
-                                this.Movement = Direction.RIGHT;
-                            if (this.Head.Y > NextStep.Y)
-                                this.Movement = Direction.UP;
-                            else if (this.Head.Y < NextStep.Y)
-                                this.Movement = Direction.DOWN;
-                        }
-                    }
-                    else
-                    {
-                        //this.UpdateMovingState(false);
-                    }
+                    Render.Draw(this.Graphic, new Point(NewBodies[i].Position.X * Constants.Block_Size, NewBodies[i].Position.Y * Constants.Block_Size), Constants.Snake_Border, this.Color);
                 }
             }
-        }
+            this.Bodies = NewBodies;
 
-        public void Dispose()
-        {
-            for (int i = 2; i <= this.Length; i++)
-                Render.Draw(this.Graphic, new Point(this.Bodies[i].X * Constants.Block_Size, this.Bodies[i].Y * Constants.Block_Size), Constants.Background_Border, Constants.Background_Color);
-            Render.Draw(this.Graphic, new Point(this.Head.X * Constants.Block_Size, this.Head.Y * Constants.Block_Size), Constants.Background_Border, Constants.Background_Color);
-            this.MainTimer.Enabled = false;
-            this.MainTimer.Dispose();
-            this.isDisposed = true;
+            if (Snake_Control != null)
+            {
+                Snake_Control(this, OldBodies, NewBodies);
+            }
+
+            if (this.IsBot)
+            {
+                Snake_FindPath(this);
+                if (this.Computer_Path != null)
+                {
+                    if (this.Computer_Path.Count > 0)
+                    {
+                        Point NextStep = this.Computer_Path[this.Computer_Path.Count - 1];
+                        this.Computer_Path.RemoveAt(this.Computer_Path.Count - 1);
+                        if (this.Head.Position.X > NextStep.X)
+                            this.Direction = Direction.LEFT;
+                        else if (this.Head.Position.X < NextStep.X)
+                            this.Direction = Direction.RIGHT;
+                        if (this.Head.Position.Y > NextStep.Y)
+                            this.Direction = Direction.UP;
+                        else if (this.Head.Position.Y < NextStep.Y)
+                            this.Direction = Direction.DOWN;
+                    }
+                }
+                else
+                {
+                    //this.UpdateMovingState(false);
+                }
+            }
         }
 
         public void Draw()
         {
-            Render.Draw(this.Graphic, new Point(this.Head.X * Constants.Block_Size, this.Head.Y * Constants.Block_Size), Constants.Snake_Border, Constants.Snake_Head);
-            for (int i = 2; i <= this.Length; i++)
-                Render.Draw(this.Graphic, new Point(this.Bodies[i].X * Constants.Block_Size, this.Bodies[i].Y * Constants.Block_Size), Constants.Snake_Border, this.Color);
+            Render.Draw(this.Graphic, new Point(this.Head.Position.X * Constants.Block_Size, this.Head.Position.Y * Constants.Block_Size), Constants.Snake_Border, Constants.Snake_Head);
+            for (int i = 1; i < this.Length; i++)
+                Render.Draw(this.Graphic, new Point(this.Bodies[i].Position.X * Constants.Block_Size, this.Bodies[i].Position.Y * Constants.Block_Size), Constants.Snake_Border, this.Color);
         }
 
-        public void AddLength()
+        public void AddLength(int Length)
         {
-            this.Length += 1;
-            this.Tail = new Point(Bodies[this.Length - 1].X, Bodies[this.Length - 1].Y);
-            //Console.WriteLine($"Add length ({this.Length}) {Bodies[this.Length - 1].X},{Bodies[this.Length - 1].Y}");
+            if (Length <= 0) return;
+
+            this.PendingBodies += Length;
         }
-        public void UpdateMoveSpeed(int Speed)
+
+        public void ChangeDirection(Direction Direction)
         {
-            this.MainTimer.Interval = Speed;
-            this.MoveSpeed = Speed;
-        }
-        public void UpdateMovingState(bool Start)
-        {
-            try
+            if (this.Direction == Direction.LEFT && Direction != Direction.RIGHT ||
+                this.Direction == Direction.RIGHT && Direction != Direction.LEFT ||
+                this.Direction == Direction.UP && Direction != Direction.DOWN ||
+                this.Direction == Direction.DOWN && Direction != Direction.UP)
             {
-                this.IsMoving = Start;
-                if (this.MainTimer != null)
-                    this.MainTimer.Enabled = Start;
+                this.Direction = Direction;
             }
-            catch
-            {
+        }
 
-            }
+        public void ChangeSpeed(int Speed)
+        {
+            if (Speed > 0) this.MoveSpeed = Speed;
+        }
 
+        public void ChangeState(SnakeState State)
+        {
+            this.State = State;
+        }
+
+        public void Die()
+        {
+            this.ChangeState(SnakeState.DIE);
+        }
+
+        public void Dispose()
+        {
+            for (int i = 0; i < this.Length; i++)
+                Render.Draw(this.Graphic, new Point(this.Bodies[i].Position.X * Constants.Block_Size, this.Bodies[i].Position.Y * Constants.Block_Size), Constants.Background_Border, Constants.Background_Color);
+            Render.Draw(this.Graphic, new Point(this.Head.Position.X * Constants.Block_Size, this.Head.Position.Y * Constants.Block_Size), Constants.Background_Border, Constants.Background_Color);
+            this.ChangeState(SnakeState.DISPOSED);
         }
     }
 }
