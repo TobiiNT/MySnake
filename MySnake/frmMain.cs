@@ -20,7 +20,7 @@ namespace MySnake
         public List<Obstacle> Obstacles;
         public List<Food> Foods;
 
-        public Snake2 PlayerSnake;
+        public Snake PlayerSnake;
         public List<Snake> SnakeList;
 
         public Map Board;
@@ -108,7 +108,7 @@ namespace MySnake
             }
 
             var Position = Get_Random_Position();
-            this.PlayerSnake = new Snake2(Position.X, Position.Y, Direction.RIGHT, 3);
+            this.PlayerSnake = new Snake(Position.X, Position.Y, Direction.RIGHT, 3);
             this.PlayerSnake.SetColor(Color.Black, Color.Blue);
             //this.PlayerSnake.Snake_Control += new Snake.SnakeControl(SnakeLogic);
             this.DrawSnake(PlayerSnake);

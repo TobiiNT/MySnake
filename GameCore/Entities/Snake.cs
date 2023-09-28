@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace GameCore.Entities
 {
-    public class Snake2 : ISnake
+    public class Snake : ISnake
     {
         public ISnakeBody Head => Bodies[0];
 
@@ -39,7 +39,7 @@ namespace GameCore.Entities
 
         public event EventHandler<EventArgs> OnDisposed;
 
-        public Snake2(int X, int Y, Direction Direction, int StartLength)
+        public Snake(int X, int Y, Direction Direction, int StartLength)
         {
             this.Bodies = new List<ISnakeBody>();
             this.State = SnakeState.IDLE;
