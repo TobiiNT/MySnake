@@ -17,14 +17,12 @@ namespace MySnake
     {
         public Graphics Graphic;
 
+        public Map Board;
         public List<Obstacle> Obstacles;
         public List<Food> Foods;
 
         public Snake PlayerSnake;
         public List<Snake> SnakeList;
-
-        public Map Board;
-        private object LockObject = new object();
 
         private Thread MainThread;
 
@@ -135,10 +133,7 @@ namespace MySnake
             this.AddNewFood();
             this.AddNewFood();
 
-            lock (this.LockObject)
-            {
-                this.Graphic.Clear(Color.White);
-            }
+            this.Graphic.Clear(Color.White);
         }
 
         public Point Get_Random_Position()
@@ -187,7 +182,7 @@ namespace MySnake
             this.DrawSnake(PlayerSnake);
             foreach (Snake snake in this.SnakeList)
             {
-                snake.Draw();
+                //snake.Draw();
             }
         }
 
@@ -224,17 +219,7 @@ namespace MySnake
             return bHandled;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (this.PlayerSnake.State == SnakeState.MOVING)
-            {
-                this.PlayerSnake.ChangeState(SnakeState.IDLE);
-            }
-            else if (this.PlayerSnake.State == SnakeState.IDLE)
-            {
-                this.PlayerSnake.ChangeState(SnakeState.MOVING);
-            }
-        }
+       
 
         public void UpdateStatus()
         {
@@ -260,33 +245,24 @@ namespace MySnake
             this.UpdateStatus();
         }
 
-        public void Caculate_Path(Snake Current_Snake)
+        public void CaculatePath(Snake Current_Snake)
         {
-            BFSAlgorithm algorithm = new BFSAlgorithm(this.Board, Current_Snake.Bodies[1].Position);
-            Current_Snake.Computer_Path = algorithm.FindPath();
-            if (Current_Snake.Computer_Path == null)
-            {
-                Current_Snake.Dispose();
-                //Current_Snake.MovingState(false);
-                return;
-            }
-            Current_Snake.Computer_Path.RemoveAt(Current_Snake.Computer_Path.Count - 1);
-            DrawPath(Current_Snake);
+            //BFSAlgorithm algorithm = new BFSAlgorithm(this.Board, Current_Snake.Bodies[1].Position);
+            //Current_Snake.Computer_Path = algorithm.FindPath();
+            //if (Current_Snake.Computer_Path == null)
+            //{
+            //    Current_Snake.Dispose();
+            //    //Current_Snake.MovingState(false);
+            //    return;
+            //}
+            //Current_Snake.Computer_Path.RemoveAt(Current_Snake.Computer_Path.Count - 1);
+            //DrawPath(Current_Snake);
         }
 
         public void DrawPath(Snake snake)
         {
-            for (int i = 1; i < snake.Computer_Path.Count; i++)
-                Render.Draw(this.Graphic, new Point(snake.Computer_Path[i].X * 20, snake.Computer_Path[i].Y * 20), Pens.Orange, Brushes.Lime, 20, 5);
-        }
-
-        private void btn_Find_Path_Click(object sender, EventArgs e)
-        {
-            foreach (Snake snake in this.SnakeList)
-            {
-                this.Caculate_Path(snake);
-                snake.ChangeState(SnakeState.MOVING);
-            }
+            //for (int i = 1; i < snake.Computer_Path.Count; i++)
+            //    Render.Draw(this.Graphic, new Point(snake.Computer_Path[i].X * 20, snake.Computer_Path[i].Y * 20), Pens.Orange, Brushes.Lime, 20, 5);
         }
 
         private void numberColumnAndRow_ValueChanged(object sender, EventArgs e)
@@ -296,6 +272,32 @@ namespace MySnake
             {
                 snake.ChangeSpeed((int)this.numberColumnAndRow.Value);
             }
+        }
+
+
+        private void btnStartSnakeMove_Click(object sender, EventArgs e)
+        {
+            if (this.PlayerSnake.State == SnakeState.MOVING)
+            {
+                this.PlayerSnake.ChangeState(SnakeState.IDLE);
+            }
+            else if (this.PlayerSnake.State == SnakeState.IDLE)
+            {
+                this.PlayerSnake.ChangeState(SnakeState.MOVING);
+            }
+        }
+        private void btnFindPath_Click(object sender, EventArgs e)
+        {
+            foreach (Snake snake in this.SnakeList)
+            {
+                this.CaculatePath(snake);
+                snake.ChangeState(SnakeState.MOVING);
+                snake.ChangeSpeed((int)this.numberColumnAndRow.Value);
+            }
+        }
+        private void btnRestart_Click(object sender, EventArgs e)
+        {
+            this.Reset();
         }
     }
 }

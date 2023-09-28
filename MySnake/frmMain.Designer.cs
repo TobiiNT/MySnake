@@ -31,14 +31,15 @@
             this.components = new System.ComponentModel.Container();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.MainPanel = new System.Windows.Forms.Panel();
-            this.btn_Start = new System.Windows.Forms.Button();
+            this.btnStartSnakeMoving = new System.Windows.Forms.Button();
             this.lblPlayer_Score = new System.Windows.Forms.Label();
             this.MainTimer = new System.Windows.Forms.Timer(this.components);
-            this.btn_Find_Path = new System.Windows.Forms.Button();
+            this.btnFindPath = new System.Windows.Forms.Button();
             this.numberColumnAndRow = new System.Windows.Forms.NumericUpDown();
             this.table_Score = new System.Windows.Forms.ListView();
             this.clName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clPoint = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnRestart = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberColumnAndRow)).BeginInit();
             this.SuspendLayout();
@@ -66,16 +67,16 @@
             this.MainPanel.TabIndex = 0;
             this.MainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.MainPanel_Paint);
             // 
-            // btn_Start
+            // btnStartSnakeMoving
             // 
-            this.btn_Start.Location = new System.Drawing.Point(895, 191);
-            this.btn_Start.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_Start.Name = "btn_Start";
-            this.btn_Start.Size = new System.Drawing.Size(112, 34);
-            this.btn_Start.TabIndex = 5;
-            this.btn_Start.Text = "Start";
-            this.btn_Start.UseVisualStyleBackColor = true;
-            this.btn_Start.Click += new System.EventHandler(this.button1_Click);
+            this.btnStartSnakeMoving.Location = new System.Drawing.Point(881, 139);
+            this.btnStartSnakeMoving.Margin = new System.Windows.Forms.Padding(4);
+            this.btnStartSnakeMoving.Name = "btnStartSnakeMoving";
+            this.btnStartSnakeMoving.Size = new System.Drawing.Size(112, 34);
+            this.btnStartSnakeMoving.TabIndex = 5;
+            this.btnStartSnakeMoving.Text = "Start move";
+            this.btnStartSnakeMoving.UseVisualStyleBackColor = true;
+            this.btnStartSnakeMoving.Click += new System.EventHandler(this.btnStartSnakeMove_Click);
             // 
             // lblPlayer_Score
             // 
@@ -92,20 +93,20 @@
             this.MainTimer.Enabled = true;
             this.MainTimer.Tick += new System.EventHandler(this.MainTimer_Tick);
             // 
-            // btn_Find_Path
+            // btnFindPath
             // 
-            this.btn_Find_Path.Location = new System.Drawing.Point(895, 233);
-            this.btn_Find_Path.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_Find_Path.Name = "btn_Find_Path";
-            this.btn_Find_Path.Size = new System.Drawing.Size(112, 34);
-            this.btn_Find_Path.TabIndex = 8;
-            this.btn_Find_Path.Text = "Find Path";
-            this.btn_Find_Path.UseVisualStyleBackColor = true;
-            this.btn_Find_Path.Click += new System.EventHandler(this.btn_Find_Path_Click);
+            this.btnFindPath.Location = new System.Drawing.Point(881, 181);
+            this.btnFindPath.Margin = new System.Windows.Forms.Padding(4);
+            this.btnFindPath.Name = "btnFindPath";
+            this.btnFindPath.Size = new System.Drawing.Size(112, 34);
+            this.btnFindPath.TabIndex = 8;
+            this.btnFindPath.Text = "Find Path";
+            this.btnFindPath.UseVisualStyleBackColor = true;
+            this.btnFindPath.Click += new System.EventHandler(this.btnFindPath_Click);
             // 
             // numberColumnAndRow
             // 
-            this.numberColumnAndRow.Location = new System.Drawing.Point(895, 147);
+            this.numberColumnAndRow.Location = new System.Drawing.Point(881, 105);
             this.numberColumnAndRow.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -135,9 +136,9 @@
             this.table_Score.GridLines = true;
             this.table_Score.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.table_Score.HideSelection = false;
-            this.table_Score.Location = new System.Drawing.Point(881, 294);
+            this.table_Score.Location = new System.Drawing.Point(881, 222);
             this.table_Score.Name = "table_Score";
-            this.table_Score.Size = new System.Drawing.Size(266, 220);
+            this.table_Score.Size = new System.Drawing.Size(268, 220);
             this.table_Score.TabIndex = 11;
             this.table_Score.UseCompatibleStateImageBehavior = false;
             this.table_Score.View = System.Windows.Forms.View.Details;
@@ -147,16 +148,28 @@
             this.clName.Text = "";
             this.clName.Width = 200;
             // 
+            // btnRestart
+            // 
+            this.btnRestart.Location = new System.Drawing.Point(1001, 139);
+            this.btnRestart.Margin = new System.Windows.Forms.Padding(4);
+            this.btnRestart.Name = "btnRestart";
+            this.btnRestart.Size = new System.Drawing.Size(112, 34);
+            this.btnRestart.TabIndex = 12;
+            this.btnRestart.Text = "Restart";
+            this.btnRestart.UseVisualStyleBackColor = true;
+            this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1308, 885);
+            this.Controls.Add(this.btnRestart);
             this.Controls.Add(this.table_Score);
             this.Controls.Add(this.numberColumnAndRow);
-            this.Controls.Add(this.btn_Find_Path);
+            this.Controls.Add(this.btnFindPath);
             this.Controls.Add(this.lblPlayer_Score);
-            this.Controls.Add(this.btn_Start);
+            this.Controls.Add(this.btnStartSnakeMoving);
             this.Controls.Add(this.groupBox3);
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -173,14 +186,15 @@
 
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Panel MainPanel;
-        private System.Windows.Forms.Button btn_Start;
+        private System.Windows.Forms.Button btnStartSnakeMoving;
         private System.Windows.Forms.Label lblPlayer_Score;
         private System.Windows.Forms.Timer MainTimer;
-        private System.Windows.Forms.Button btn_Find_Path;
+        private System.Windows.Forms.Button btnFindPath;
         private System.Windows.Forms.NumericUpDown numberColumnAndRow;
         private System.Windows.Forms.ListView table_Score;
         private System.Windows.Forms.ColumnHeader clName;
         private System.Windows.Forms.ColumnHeader clPoint;
+        private System.Windows.Forms.Button btnRestart;
     }
 }
 

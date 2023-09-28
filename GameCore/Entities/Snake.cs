@@ -156,7 +156,7 @@ namespace GameCore.Entities
         public void Dispose()
         {
             this.ChangeState(SnakeState.DISPOSED);
-            this.OnDisposed(this, EventArgs.Empty);
+            this.OnDisposed?.Invoke(this, EventArgs.Empty);
         }
     }
 }
