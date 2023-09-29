@@ -20,6 +20,6 @@ namespace MySnake
         public static Pen Snake_Border = Pens.BlueViolet;
         public static Brush Snake_Head = Brushes.Red;
 
-        public static int FPS = 60;
+        public static int FPS = 30;
     }
 }

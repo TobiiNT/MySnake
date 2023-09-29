@@ -1,4 +1,4 @@
-﻿using GameCore.Entities;
+﻿using GameCore.Entities.Implements.Games;
 using GameCore.Entities.Interfaces;
 using System.Collections.Generic;
 using System.IO;

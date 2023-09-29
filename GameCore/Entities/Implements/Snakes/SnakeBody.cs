@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace GameCore.Entities
+namespace GameCore.Entities.Implements.Snakes
 {
     public class SnakeBody : ISnakeBody
     {

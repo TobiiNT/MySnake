@@ -6,6 +6,9 @@ namespace GameCore.Entities.Interfaces
 {
     public interface ISnake : IGameObject
     {
+        ISnakeController Controller { get; }
+        void SetController(ISnakeController Controller);
+
         ISnakeBody Head { get; }
         ISnakeBody Tail { get; }
         List<ISnakeBody> Bodies { get; }

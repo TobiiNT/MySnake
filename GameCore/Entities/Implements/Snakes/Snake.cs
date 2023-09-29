@@ -1,14 +1,16 @@
 ﻿using GameCore.Entities.Enums;
+using GameCore.Entities.Implements.Games;
 using GameCore.Entities.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
-namespace GameCore.Entities
+namespace GameCore.Entities.Implements.Snakes
 {
     public class Snake : ISnake
     {
+        public ISnakeController Controller { private set; get; }
+
         public ISnakeBody Head => Bodies[0];
 
         public ISnakeBody Tail => Bodies[Length - 1];
@@ -67,6 +69,11 @@ namespace GameCore.Entities
             this.Color = new SolidBrush(Body);
         }
 
+        public void SetController(ISnakeController Controller)
+        {
+            this.Controller = Controller;
+        }
+
         public void AddLength(int Length)
         {
             if (Length <= 0) return;
@@ -102,6 +109,14 @@ namespace GameCore.Entities
             if (this.LastMoveTime.AddMilliseconds(this.MoveSpeed) > DateTime.Now) return;
             this.LastMoveTime = DateTime.Now;
 
+            // If the snake has a controller, get the next move from the controller
+            if (this.Controller != null)
+            {
+                Direction NextDirection = this.Controller.GetNextMove(this);
+                
+                this.ChangeDirection(NextDirection);
+            }
+          
             Point LastTailPosition = this.Tail.Position;
             for (int i = Length - 1; i > 0; i--)
             {
@@ -113,7 +128,7 @@ namespace GameCore.Entities
                 this.Head.MoveTo(new Point(this.Head.Position.X - 1, this.Head.Position.Y));
             else if (this.Direction == Direction.RIGHT)
                 this.Head.MoveTo(new Point(this.Head.Position.X + 1, this.Head.Position.Y));
-            if (this.Direction == Direction.UP)
+            else if(this.Direction == Direction.UP)
                 this.Head.MoveTo(new Point(this.Head.Position.X, this.Head.Position.Y - 1));
             else if (this.Direction == Direction.DOWN)
                 this.Head.MoveTo(new Point(this.Head.Position.X, this.Head.Position.Y + 1));

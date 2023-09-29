@@ -1,6 +1,6 @@
 ﻿namespace MySnake
 {
-    partial class frmMain
+    partial class FormMain
     {
         /// <summary>
         /// Required designer variable.
@@ -35,13 +35,13 @@
             this.lblPlayer_Score = new System.Windows.Forms.Label();
             this.MainTimer = new System.Windows.Forms.Timer(this.components);
             this.btnFindPath = new System.Windows.Forms.Button();
-            this.numberColumnAndRow = new System.Windows.Forms.NumericUpDown();
-            this.table_Score = new System.Windows.Forms.ListView();
+            this.NumericSpeed = new System.Windows.Forms.NumericUpDown();
+            this.TableBotStatus = new System.Windows.Forms.ListView();
             this.clName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clPoint = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnRestart = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numberColumnAndRow)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox3
@@ -106,42 +106,42 @@
             // 
             // numberColumnAndRow
             // 
-            this.numberColumnAndRow.Location = new System.Drawing.Point(881, 105);
-            this.numberColumnAndRow.Maximum = new decimal(new int[] {
+            this.NumericSpeed.Location = new System.Drawing.Point(881, 105);
+            this.NumericSpeed.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numberColumnAndRow.Minimum = new decimal(new int[] {
+            this.NumericSpeed.Minimum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numberColumnAndRow.Name = "numberColumnAndRow";
-            this.numberColumnAndRow.Size = new System.Drawing.Size(112, 27);
-            this.numberColumnAndRow.TabIndex = 9;
-            this.numberColumnAndRow.Value = new decimal(new int[] {
+            this.NumericSpeed.Name = "numberColumnAndRow";
+            this.NumericSpeed.Size = new System.Drawing.Size(112, 27);
+            this.NumericSpeed.TabIndex = 9;
+            this.NumericSpeed.Value = new decimal(new int[] {
             500,
             0,
             0,
             0});
-            this.numberColumnAndRow.ValueChanged += new System.EventHandler(this.numberColumnAndRow_ValueChanged);
+            this.NumericSpeed.ValueChanged += new System.EventHandler(this.NumericSpeed_ValueChanged);
             // 
             // table_Score
             // 
-            this.table_Score.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.TableBotStatus.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clName,
             this.clPoint});
-            this.table_Score.FullRowSelect = true;
-            this.table_Score.GridLines = true;
-            this.table_Score.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.table_Score.HideSelection = false;
-            this.table_Score.Location = new System.Drawing.Point(881, 222);
-            this.table_Score.Name = "table_Score";
-            this.table_Score.Size = new System.Drawing.Size(268, 220);
-            this.table_Score.TabIndex = 11;
-            this.table_Score.UseCompatibleStateImageBehavior = false;
-            this.table_Score.View = System.Windows.Forms.View.Details;
+            this.TableBotStatus.FullRowSelect = true;
+            this.TableBotStatus.GridLines = true;
+            this.TableBotStatus.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.TableBotStatus.HideSelection = false;
+            this.TableBotStatus.Location = new System.Drawing.Point(881, 222);
+            this.TableBotStatus.Name = "table_Score";
+            this.TableBotStatus.Size = new System.Drawing.Size(268, 220);
+            this.TableBotStatus.TabIndex = 11;
+            this.TableBotStatus.UseCompatibleStateImageBehavior = false;
+            this.TableBotStatus.View = System.Windows.Forms.View.Details;
             // 
             // clName
             // 
@@ -165,8 +165,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1308, 885);
             this.Controls.Add(this.btnRestart);
-            this.Controls.Add(this.table_Score);
-            this.Controls.Add(this.numberColumnAndRow);
+            this.Controls.Add(this.TableBotStatus);
+            this.Controls.Add(this.NumericSpeed);
             this.Controls.Add(this.btnFindPath);
             this.Controls.Add(this.lblPlayer_Score);
             this.Controls.Add(this.btnStartSnakeMoving);
@@ -175,8 +175,9 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmMain";
             this.Text = "My Snake";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.groupBox3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numberColumnAndRow)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -190,8 +191,8 @@
         private System.Windows.Forms.Label lblPlayer_Score;
         private System.Windows.Forms.Timer MainTimer;
         private System.Windows.Forms.Button btnFindPath;
-        private System.Windows.Forms.NumericUpDown numberColumnAndRow;
-        private System.Windows.Forms.ListView table_Score;
+        private System.Windows.Forms.NumericUpDown NumericSpeed;
+        private System.Windows.Forms.ListView TableBotStatus;
         private System.Windows.Forms.ColumnHeader clName;
         private System.Windows.Forms.ColumnHeader clPoint;
         private System.Windows.Forms.Button btnRestart;
