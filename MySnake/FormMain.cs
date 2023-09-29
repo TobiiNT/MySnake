@@ -89,29 +89,7 @@ namespace MySnake
             return Position;
         }
 
-        public void SnakeLogic(Snake CurrentSnake, List<ISnakeBody> OldSnake, List<ISnakeBody> NewSnake)
-        {
-            //this.Board.ChangeCellsType(OldSnake, CellType.EMPTY);
-
-            CellType temp = this.Map.GetCellType(NewSnake.First().Position);
-
-            if (temp == CellType.OBSTACLE) //đụng vật cản
-            {
-                CurrentSnake.Dispose();
-            }
-            else if (temp == CellType.FOOD)
-            {
-                foreach (Food Food in this.Map.Foods.Where(f => f.Position == NewSnake[0].Position).ToList())
-                {
-                    Food.Dispose();
-                    CurrentSnake.AddLength(1);
-                    this.Map.AddNewFood();
-                }
-            }
-
-            this.Map.ChangeCellsType(OldSnake.Select(i => i.Position).ToList(), CellType.EMPTY);
-            this.Map.ChangeCellsType(NewSnake.Select(i => i.Position).ToList(), CellType.OBSTACLE);
-        }
+       
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {

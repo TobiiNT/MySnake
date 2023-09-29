@@ -41,6 +41,8 @@ namespace GameCore.Entities.Implements.Snakes
 
         public event EventHandler<EventArgs> OnDisposed;
 
+        public event EventHandler<EventArgs> OnSnakeMoved;
+
         public Snake(int X, int Y, Direction Direction, int StartLength)
         {
             this.Bodies = new List<ISnakeBody>();
@@ -139,6 +141,7 @@ namespace GameCore.Entities.Implements.Snakes
                 Bodies.Add(new SnakeBody(this, LastTailPosition.X, LastTailPosition.Y));
             }
 
+            this.OnSnakeMoved?.Invoke(this, EventArgs.Empty);
             if (IsSelfCollision()) // Check for collisions with itself
                 Die();
         }

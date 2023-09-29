@@ -145,9 +145,33 @@ namespace GameCore.Entities.Implements.Games
 
             this.SnakeList.Add(NewSnake);
             //NewSnake.OnDisposed += NewSnake_OnDisposed;
-            //NewSnake.OnSnakeMoved += NewSnake_OnSnakeMoved;
+            NewSnake.OnSnakeMoved += NewSnake_OnSnakeMoved;
             //NewSnake.OnSnakeLengthChanged += NewSnake_OnSnakeLengthChanged;
             return NewSnake;
+        }
+
+        public void NewSnake_OnSnakeMoved(Snake CurrentSnake, List<ISnakeBody> OldSnake, List<ISnakeBody> NewSnake)
+        {
+            //this.Board.ChangeCellsType(OldSnake, CellType.EMPTY);
+
+            CellType temp = GetCellType(NewSnake.First().Position);
+
+            if (temp == CellType.OBSTACLE) //đụng vật cản
+            {
+                CurrentSnake.Dispose();
+            }
+            else if (temp == CellType.FOOD)
+            {
+                foreach (Food Food in Foods.Where(f => f.Position == NewSnake[0].Position).ToList())
+                {
+                    Food.Dispose();
+                    CurrentSnake.AddLength(1);
+                    AddNewFood();
+                }
+            }
+
+            ChangeCellsType(OldSnake.Select(i => i.Position).ToList(), CellType.EMPTY);
+            ChangeCellsType(NewSnake.Select(i => i.Position).ToList(), CellType.OBSTACLE);
         }
     }
 }
