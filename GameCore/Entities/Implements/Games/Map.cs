@@ -95,10 +95,6 @@ namespace GameCore.Entities.Implements.Games
             return Matrix[Cell.X, Cell.Y];
         }
 
-        public int GetWidth() => Matrix.GetLength(0);
-        public int GetHeight() => Matrix.GetLength(1);
-
-
         private void SetCellValue(Point Cell, CellType Type)
         {
             if (Cell == null || Cell.X >= Matrix.GetLength(0) || Cell.Y >= Matrix.GetLength(1))
@@ -124,8 +120,8 @@ namespace GameCore.Entities.Implements.Games
 
             do
             {
-                X = Randomizer.Next(1, this.GetWidth() - 2);
-                Y = Randomizer.Next(1, this.GetHeight() - 2);
+                X = Randomizer.Next(1, this.Width - 2);
+                Y = Randomizer.Next(1, this.Height - 2);
             } while (!this.IsCellAvailable(new Point(X, Y)));
 
             Food NewFood = new Food(X, Y);
@@ -185,6 +181,15 @@ namespace GameCore.Entities.Implements.Games
                 ChangeCell(MoveEvent.LastTailPosition, CellType.EMPTY);
                 ChangeCells(CurrentSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
             }
+        }
+
+        public Point GetRandomPosition()
+        {
+            Point Position = new Point(Randomizer.Next(2, this.Width - 1), Randomizer.Next(2, this.Height - 1));
+            Thread.Sleep(1);
+            if (!this.IsCellAvailable(Position))
+                GetRandomPosition();
+            return Position;
         }
     }
 }

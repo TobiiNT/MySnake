@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.MainPanel = new System.Windows.Forms.Panel();
             this.btnStartSnakeMoving = new System.Windows.Forms.Button();
             this.lblPlayer_Score = new System.Windows.Forms.Label();
             this.MainTimer = new System.Windows.Forms.Timer(this.components);
@@ -40,32 +38,9 @@
             this.clName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clPoint = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnRestart = new System.Windows.Forms.Button();
-            this.groupBox3.SuspendLayout();
+            this.GraphicControl = new OpenTK.GLControl();
             ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).BeginInit();
             this.SuspendLayout();
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.MainPanel);
-            this.groupBox3.Location = new System.Drawing.Point(7, -1);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(850, 872);
-            this.groupBox3.TabIndex = 4;
-            this.groupBox3.TabStop = false;
-            // 
-            // MainPanel
-            // 
-            this.MainPanel.BackColor = System.Drawing.Color.White;
-            this.MainPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainPanel.Location = new System.Drawing.Point(4, 24);
-            this.MainPanel.Margin = new System.Windows.Forms.Padding(4);
-            this.MainPanel.Name = "MainPanel";
-            this.MainPanel.Size = new System.Drawing.Size(842, 844);
-            this.MainPanel.TabIndex = 0;
-            this.MainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.MainPanel_Paint);
             // 
             // btnStartSnakeMoving
             // 
@@ -104,7 +79,7 @@
             this.btnFindPath.UseVisualStyleBackColor = true;
             this.btnFindPath.Click += new System.EventHandler(this.btnFindPath_Click);
             // 
-            // numberColumnAndRow
+            // NumericSpeed
             // 
             this.NumericSpeed.Location = new System.Drawing.Point(881, 105);
             this.NumericSpeed.Maximum = new decimal(new int[] {
@@ -117,7 +92,7 @@
             0,
             0,
             0});
-            this.NumericSpeed.Name = "numberColumnAndRow";
+            this.NumericSpeed.Name = "NumericSpeed";
             this.NumericSpeed.Size = new System.Drawing.Size(112, 27);
             this.NumericSpeed.TabIndex = 9;
             this.NumericSpeed.Value = new decimal(new int[] {
@@ -127,7 +102,7 @@
             0});
             this.NumericSpeed.ValueChanged += new System.EventHandler(this.NumericSpeed_ValueChanged);
             // 
-            // table_Score
+            // TableBotStatus
             // 
             this.TableBotStatus.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clName,
@@ -137,7 +112,7 @@
             this.TableBotStatus.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.TableBotStatus.HideSelection = false;
             this.TableBotStatus.Location = new System.Drawing.Point(881, 222);
-            this.TableBotStatus.Name = "table_Score";
+            this.TableBotStatus.Name = "TableBotStatus";
             this.TableBotStatus.Size = new System.Drawing.Size(268, 220);
             this.TableBotStatus.TabIndex = 11;
             this.TableBotStatus.UseCompatibleStateImageBehavior = false;
@@ -159,24 +134,34 @@
             this.btnRestart.UseVisualStyleBackColor = true;
             this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
             // 
-            // frmMain
+            // GraphicControl
+            // 
+            this.GraphicControl.BackColor = System.Drawing.Color.Black;
+            this.GraphicControl.Cursor = System.Windows.Forms.Cursors.Default;
+            this.GraphicControl.Location = new System.Drawing.Point(13, 13);
+            this.GraphicControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.GraphicControl.Name = "GraphicControl";
+            this.GraphicControl.Size = new System.Drawing.Size(845, 845);
+            this.GraphicControl.TabIndex = 13;
+            this.GraphicControl.VSync = false;
+            // 
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1308, 885);
+            this.ClientSize = new System.Drawing.Size(1308, 871);
+            this.Controls.Add(this.GraphicControl);
             this.Controls.Add(this.btnRestart);
             this.Controls.Add(this.TableBotStatus);
             this.Controls.Add(this.NumericSpeed);
             this.Controls.Add(this.btnFindPath);
             this.Controls.Add(this.lblPlayer_Score);
             this.Controls.Add(this.btnStartSnakeMoving);
-            this.Controls.Add(this.groupBox3);
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "frmMain";
+            this.Name = "FormMain";
             this.Text = "My Snake";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
-            this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -184,9 +169,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Panel MainPanel;
         private System.Windows.Forms.Button btnStartSnakeMoving;
         private System.Windows.Forms.Label lblPlayer_Score;
         private System.Windows.Forms.Timer MainTimer;
@@ -196,6 +178,7 @@
         private System.Windows.Forms.ColumnHeader clName;
         private System.Windows.Forms.ColumnHeader clPoint;
         private System.Windows.Forms.Button btnRestart;
+        private OpenTK.GLControl GraphicControl;
     }
 }
 

@@ -11,13 +11,12 @@ using GameCore.Entities.Implements.Controllers;
 using GameCore.Entities.Interfaces.Controllers;
 using GameCore.Entities.Interfaces.Games;
 using GameCore.Entities.Interfaces.Snakes;
+using OpenTK.Graphics.OpenGL;
 
 namespace MySnake
 {
     public partial class FormMain : Form
     {
-        public Graphics Graphic;
-
         public Map Map;
 
         private PlayerController PlayerController;
@@ -27,9 +26,8 @@ namespace MySnake
         public FormMain()
         {
             InitializeComponent();
-            this.DoubleBuffered = false;
-            this.Graphic = this.MainPanel.CreateGraphics();
 
+            this.GraphicControl.Paint += GraphicControl_Paint;
 
             this.PlayerController = new PlayerController();
             this.PlayerController.OnDirectionInput += Direction =>
@@ -47,15 +45,49 @@ namespace MySnake
         {
             while (true)
             {
-                foreach (var Snake in Map.SnakeList.ToList())
-                {
-                    Render.DrawSnake(this.Graphic, Snake);
-                }
+                this.GraphicControl.Invalidate();
 
-                this.MainPanel.Invalidate();
                 Thread.Sleep(1000 / Constants.FPS);
             }
         }
+
+        private void GraphicControl_Paint(object sender, PaintEventArgs e)
+        {
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            // Better point and line drawing
+            GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
+            GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
+            GL.Enable(EnableCap.PointSmooth);
+            GL.Enable(EnableCap.LineSmooth);
+
+            this.DrawObstacles();
+            this.DrawSnakes();
+
+            ErrorCode Error = GL.GetError();
+            if (Error != ErrorCode.NoError)
+            {
+                Console.WriteLine($"OpenGL Error: {Error}");
+            }
+
+            this.GraphicControl.SwapBuffers();
+        }
+
+        private void DrawObstacles()
+        {
+            TextureData Texture = this.TextureManager.GetMapTexture(TextureType.Npc);
+            foreach (var Obstacle in Map.Obstacles)
+            {
+                this.DrawTexture(Texture, Obstacle.Position.X, Obstacle.Position.Y);
+            }
+        }
+
+        private void DrawSnakes()
+        {
+            throw new NotImplementedException();
+        }
+
+       
 
         private void Reset()
         {
@@ -65,46 +97,17 @@ namespace MySnake
             this.Map.AddNewFood();
             this.Map.ResetSnakes();
 
-            var Position = GetRandomPosition();
+            var Position = Map.GetRandomPosition();
             Snake NewSnake = this.Map.NewSnake(Position, Color.Green, this.PlayerController);
-            Render.DrawSnake(this.Graphic, NewSnake);
             this.Map.ChangeCells(NewSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
 
             for (int i = 0; i < 2; i++)
             {
-                Position = GetRandomPosition();
+                Position = Map.GetRandomPosition();
                 ISnakeController Algorithm = new BfsController(this.Map);
                 Snake NewBotSnake = this.Map.NewSnake(Position, Color.Blue, Algorithm);
-                Render.DrawSnake(this.Graphic, NewBotSnake);
                 this.Map.ChangeCells(NewBotSnake.Bodies.Select(s => s.Position).ToList(), CellType.OBSTACLE);
                 Thread.Sleep(1);
-            }
-        }
-
-        public Point GetRandomPosition()
-        {
-            Point Position = new Point(Randomizer.Next(2, this.Map.GetWidth() - 1), Randomizer.Next(2, this.Map.GetHeight() - 1));
-            Thread.Sleep(1);
-            if (!this.Map.IsCellAvailable(Position))
-                GetRandomPosition();
-            return Position;
-        }
-
-       
-
-        private void MainPanel_Paint(object sender, PaintEventArgs e)
-        {
-            foreach (IGameObject Object in this.Map.Obstacles)
-            {
-                Render.Draw(this.Graphic, Object);
-            }
-            foreach (IGameObject Object in this.Map.Foods)
-            {
-                Render.Draw(this.Graphic, Object);
-            }
-            foreach (ISnake Snake in this.Map.SnakeList)
-            {
-                Render.DrawSnake(this.Graphic, Snake);
             }
         }
 
@@ -137,17 +140,13 @@ namespace MySnake
             return IsHandled;
         }
 
-
-
-        public void UpdateStatus()
+        private void MainTimer_Tick(object sender, EventArgs e)
         {
             Snake PlayerSnake = this.Map.SnakeList.Where(s => s.Controller == this.PlayerController).FirstOrDefault();
-            if (PlayerSnake != null)
-                this.lblPlayer_Score.Text = $"Điểm của người chơi: {PlayerSnake.Length}";
+            if (PlayerSnake != null) this.lblPlayer_Score.Text = $"Điểm của người chơi: {PlayerSnake.Length}";
 
 
             this.TableBotStatus.Items.Clear();
-
             foreach (Snake Snake in this.Map.SnakeList)
             {
                 string[] items = new string[3];
@@ -156,11 +155,6 @@ namespace MySnake
 
                 this.TableBotStatus.Items.Insert(this.TableBotStatus.Items.Count, new ListViewItem(items));
             }
-        }
-
-        private void MainTimer_Tick(object sender, EventArgs e)
-        {
-            this.UpdateStatus();
         }
 
         private void NumericSpeed_ValueChanged(object sender, EventArgs e)
@@ -197,7 +191,6 @@ namespace MySnake
         {
             this.Reset();
         }
-
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.GraphicThread?.Abort();
