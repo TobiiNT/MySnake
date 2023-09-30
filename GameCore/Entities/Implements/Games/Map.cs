@@ -140,14 +140,13 @@ namespace GameCore.Entities.Implements.Games
             this.SnakeList.Add(NewSnake);
             //NewSnake.OnDisposed += NewSnake_OnDisposed;
             NewSnake.OnSnakeMoving += NewSnake_OnSnakeMoving;
-            NewSnake.OnSnakeEaten += NewSnake_OnSnakeEaten;
-            //NewSnake.OnSnakeLengthChanged += NewSnake_OnSnakeLengthChanged;
+            NewSnake.OnSnakeLengthChanged += NewSnake_OnSnakeLengthChanged;
             return NewSnake;
         }
 
-        private void NewSnake_OnSnakeEaten(object sender, EventArgs e)
+        private void NewSnake_OnSnakeLengthChanged(object sender, EventArgs e)
         {
-            if (e is OnSnakeEaten EatEvent)
+            if (e is OnSnakeLengthChanged LengthChangedEvent)
             {
                 
             }

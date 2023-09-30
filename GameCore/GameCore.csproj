@@ -59,6 +59,7 @@
     <Compile Include="Entities\Interfaces\IGameObject.cs" />
     <Compile Include="Entities\Implements\Games\Map.cs" />
     <Compile Include="Entities\Implements\Snakes\Snake.cs" />
+    <Compile Include="Events\Interfaces\ISnakeEvent.cs" />
     <Compile Include="Events\OnSnakeEaten.cs" />
     <Compile Include="Events\OnSnakeMoving.cs" />
     <Compile Include="Loaders\MapLoader.cs" />

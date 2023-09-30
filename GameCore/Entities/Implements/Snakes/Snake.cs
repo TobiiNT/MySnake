@@ -44,7 +44,7 @@ namespace GameCore.Entities.Implements.Snakes
 
         public event EventHandler<EventArgs> OnSnakeMoving;
 
-        public event EventHandler<EventArgs> OnSnakeEaten;
+        public event EventHandler<EventArgs> OnSnakeLengthChanged;
 
         public Snake(int X, int Y, Direction Direction, int StartLength)
         {
@@ -142,6 +142,7 @@ namespace GameCore.Entities.Implements.Snakes
             {
                 PendingBodies--;
                 Bodies.Add(new SnakeBody(this, LastTailPosition.X, LastTailPosition.Y));
+                this.OnSnakeLengthChanged?.Invoke(this, new OnSnakeLengthChanged(this, this.Bodies.Count));
             }
 
             this.OnSnakeMoving?.Invoke(this, new OnSnakeMoving(this, LastTailPosition));

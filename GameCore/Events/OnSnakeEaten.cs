@@ -8,11 +8,11 @@ namespace GameCore.Events
     public class OnSnakeLengthChanged : EventArgs, ISnakeEvent
     {
         public ISnake Snake { private set; get; }
-        public Point LastTailPosition { private set; get; }
-        public OnSnakeLengthChanged(ISnake Snake, Point LastTailPosition)
+        public int NewLength { private set; get; }
+        public OnSnakeLengthChanged(ISnake Snake, int NewLength)
         {
             this.Snake = Snake;
-            this.LastTailPosition = LastTailPosition;
+            this.NewLength = NewLength;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace MySnake
             {
                 foreach (var Snake in Map.SnakeList)
                 {
-                    this.DrawSnake(Snake);
+                    Render.DrawSnake(this.Graphic, Snake);
                 }
 
                 this.MainPanel.Invalidate();
@@ -66,7 +66,7 @@ namespace MySnake
 
             var Position = GetRandomPosition();
             Snake NewSnake = this.Map.NewSnake(Position, Color.Green, this.PlayerController);
-            this.DrawSnake(NewSnake);
+            Render.DrawSnake(this.Graphic, NewSnake);
             this.Map.ChangeCells(NewSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
 
             for (int i = 0; i < 2; i++)
@@ -74,7 +74,7 @@ namespace MySnake
                 Position = GetRandomPosition();
                 ISnakeController Bfs = new BfsController(this.Map);
                 Snake NewBotSnake = this.Map.NewSnake(Position, Color.Blue, Bfs);
-                this.DrawSnake(NewBotSnake);
+                Render.DrawSnake(this.Graphic, NewBotSnake);
                 this.Map.ChangeCells(NewBotSnake.Bodies.Select(s => s.Position).ToList(), CellType.OBSTACLE);
                 Thread.Sleep(1);
             }
