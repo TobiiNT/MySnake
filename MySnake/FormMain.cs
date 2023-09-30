@@ -67,7 +67,7 @@ namespace MySnake
             var Position = GetRandomPosition();
             Snake NewSnake = this.Map.NewSnake(Position, Color.Green, this.PlayerController);
             this.DrawSnake(NewSnake);
-            this.Map.ChangeCellsType(NewSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
+            this.Map.ChangeCells(NewSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
 
             for (int i = 0; i < 2; i++)
             {
@@ -75,7 +75,7 @@ namespace MySnake
                 ISnakeController Bfs = new BfsController(this.Map);
                 Snake NewBotSnake = this.Map.NewSnake(Position, Color.Blue, Bfs);
                 this.DrawSnake(NewBotSnake);
-                this.Map.ChangeCellsType(NewBotSnake.Bodies.Select(s => s.Position).ToList(), CellType.OBSTACLE);
+                this.Map.ChangeCells(NewBotSnake.Bodies.Select(s => s.Position).ToList(), CellType.OBSTACLE);
                 Thread.Sleep(1);
             }
         }
@@ -103,16 +103,8 @@ namespace MySnake
             }
             foreach (Snake Snake in this.Map.SnakeList)
             {
-                this.DrawSnake(Snake);
+                Render.DrawSnake(this.Graphic, Snake);
             }
-        }
-
-        private void DrawSnake(ISnake Snake)
-        {
-            Render.Draw(this.Graphic, new Point(Snake.Head.Position.X * Constants.Block_Size, Snake.Head.Position.Y * Constants.Block_Size), Snake.Head.Border, Snake.Head.Color);
-            for (int i = 1; i < Snake.Length; i++)
-                Render.Draw(this.Graphic, new Point(Snake.Bodies[i].Position.X * Constants.Block_Size, Snake.Bodies[i].Position.Y * Constants.Block_Size), Snake.Bodies[i].Border, Snake.Bodies[i].Color);
-
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -150,7 +142,7 @@ namespace MySnake
         {
             Snake PlayerSnake = this.Map.SnakeList.Where(s => s.Controller == this.PlayerController).FirstOrDefault();
             if (PlayerSnake != null)
-                this.lblPlayer_Score.Text = $"Điểm của người chơi: {PlayerSnake.Length - Constants.Snake_Default_Size}";
+                this.lblPlayer_Score.Text = $"Điểm của người chơi: {PlayerSnake.Length}";
 
 
             this.TableBotStatus.Items.Clear();
@@ -159,7 +151,7 @@ namespace MySnake
             {
                 string[] items = new string[3];
                 items[0] = Snake.State.ToString();
-                items[1] = $"{Snake.Length - Constants.Snake_Default_Size}";
+                items[1] = $"{Snake.Length}";
 
                 this.TableBotStatus.Items.Insert(this.TableBotStatus.Items.Count, new ListViewItem(items));
             }

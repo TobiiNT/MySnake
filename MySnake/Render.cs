@@ -40,5 +40,13 @@ namespace MySnake
         {
             Render.Draw(Graphic, new Point(Object.Position.X * Size, Object.Position.Y * Size), Object.Border, Object.Color, Size, Object.BorderWidth);
         }
+
+        public static void DrawSnake(Graphics Graphic, ISnake Snake)
+        {
+            Render.Draw(Graphic, Snake.Head);
+            for (int i = 1; i < Snake.Length; i++)
+                Render.Draw(Graphic, Snake.Bodies[i]);
+
+        }
     }
 }

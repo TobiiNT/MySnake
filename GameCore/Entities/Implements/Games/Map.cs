@@ -17,7 +17,7 @@ namespace GameCore.Entities.Implements.Games
         private MapLoader MapLoader { set; get; }
         private CellType[,] Matrix { set; get; }
         public List<Obstacle> Obstacles { private set; get; }
-        public List<Food> Foods { private set; get; }
+        public List<IFood> Foods { private set; get; }
 
         public List<Snake> SnakeList { private set; get; }
         
@@ -30,7 +30,7 @@ namespace GameCore.Entities.Implements.Games
             this.Matrix = new CellType[Rows, Columns];
 
             this.Obstacles = new List<Obstacle>();
-            this.Foods = new List<Food>();
+            this.Foods = new List<IFood>();
             this.SnakeList = new List<Snake>();
 
             this.MapLoader = new MapLoader(Rows, Columns);
@@ -58,11 +58,11 @@ namespace GameCore.Entities.Implements.Games
 
             foreach (var Obstacle in this.Obstacles)
             {
-                this.ChangeCellType(Obstacle.Position, CellType.OBSTACLE);
+                this.ChangeCell(Obstacle.Position, CellType.OBSTACLE);
             }
         }
 
-        public void ChangeCellsType(List<Point> Cells, CellType Type)
+        public void ChangeCells(List<Point> Cells, CellType Type)
         {
             foreach (Point Location in Cells)
             {
@@ -70,7 +70,7 @@ namespace GameCore.Entities.Implements.Games
             }
         }
 
-        public void ChangeCellType(Point Cell, CellType Type)
+        public void ChangeCell(Point Cell, CellType Type)
         {
             SetCellValue(Cell, Type);
         }
@@ -98,18 +98,13 @@ namespace GameCore.Entities.Implements.Games
             Matrix[Cell.X, Cell.Y] = Type;
         }
 
-        private void Food_OnDisposed(object sender, EventArgs e)
-        {
-            if (e is OnFoodEaten)
-            {
-                this.DestroyFood((Food)sender);
-            }
-        }
-        private void DestroyFood(Food Food)
+        private void SnakeEatFood(ISnake Snake, IFood Food)
         {
             if (this.Foods.Contains(Food))
             {
-                this.ChangeCellType(Food.Position, CellType.EMPTY);
+                Food.ApplyEffect(Snake);
+                Food.Dispose();
+                this.ChangeCell(Food.Position, CellType.EMPTY);
                 this.Foods.Remove(Food);
             }
         }
@@ -125,10 +120,9 @@ namespace GameCore.Entities.Implements.Games
             } while (!this.IsCellAvailable(new Point(X, Y)));
 
             Food NewFood = new Food(X, Y);
-            NewFood.OnDisposed += Food_OnDisposed;
             this.Foods.Add(NewFood);
 
-            this.ChangeCellType(NewFood.Position, CellType.FOOD);
+            this.ChangeCell(NewFood.Position, CellType.FOOD);
         }
 
         public void ResetSnakes()
@@ -145,33 +139,44 @@ namespace GameCore.Entities.Implements.Games
 
             this.SnakeList.Add(NewSnake);
             //NewSnake.OnDisposed += NewSnake_OnDisposed;
-            NewSnake.OnSnakeMoved += NewSnake_OnSnakeMoved;
+            NewSnake.OnSnakeMoving += NewSnake_OnSnakeMoving;
+            NewSnake.OnSnakeEaten += NewSnake_OnSnakeEaten;
             //NewSnake.OnSnakeLengthChanged += NewSnake_OnSnakeLengthChanged;
             return NewSnake;
         }
 
-        public void NewSnake_OnSnakeMoved(Snake CurrentSnake, List<ISnakeBody> OldSnake, List<ISnakeBody> NewSnake)
+        private void NewSnake_OnSnakeEaten(object sender, EventArgs e)
         {
-            //this.Board.ChangeCellsType(OldSnake, CellType.EMPTY);
-
-            CellType temp = GetCellType(NewSnake.First().Position);
-
-            if (temp == CellType.OBSTACLE) //đụng vật cản
+            if (e is OnSnakeEaten EatEvent)
             {
-                CurrentSnake.Dispose();
+                
             }
-            else if (temp == CellType.FOOD)
+        }
+
+        private void NewSnake_OnSnakeMoving(object sender, EventArgs e)
+        {
+            if (e is OnSnakeMoving MoveEvent)
             {
-                foreach (Food Food in Foods.Where(f => f.Position == NewSnake[0].Position).ToList())
+                ISnake CurrentSnake = MoveEvent.Snake;
+
+                CellType HeadPosition = GetCellType(CurrentSnake.Head.Position);
+
+                if (HeadPosition == CellType.OBSTACLE) //đụng vật cản
                 {
-                    Food.Dispose();
-                    CurrentSnake.AddLength(1);
-                    AddNewFood();
+                    CurrentSnake.Dispose();
                 }
-            }
+                else if (HeadPosition == CellType.FOOD)
+                {
+                    foreach (IFood Food in Foods.Where(f => f.Position == CurrentSnake.Head.Position).ToList())
+                    {
+                        SnakeEatFood(CurrentSnake, Food);
+                        AddNewFood();
+                    }
+                }
 
-            ChangeCellsType(OldSnake.Select(i => i.Position).ToList(), CellType.EMPTY);
-            ChangeCellsType(NewSnake.Select(i => i.Position).ToList(), CellType.OBSTACLE);
+                ChangeCell(MoveEvent.LastTailPosition, CellType.EMPTY);
+                ChangeCells(CurrentSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
+            }
         }
     }
 }

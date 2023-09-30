@@ -1,6 +1,7 @@
 ﻿using GameCore.Entities.Enums;
 using GameCore.Entities.Implements.Games;
 using GameCore.Entities.Interfaces;
+using GameCore.Events;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -41,7 +42,9 @@ namespace GameCore.Entities.Implements.Snakes
 
         public event EventHandler<EventArgs> OnDisposed;
 
-        public event EventHandler<EventArgs> OnSnakeMoved;
+        public event EventHandler<EventArgs> OnSnakeMoving;
+
+        public event EventHandler<EventArgs> OnSnakeEaten;
 
         public Snake(int X, int Y, Direction Direction, int StartLength)
         {
@@ -141,7 +144,8 @@ namespace GameCore.Entities.Implements.Snakes
                 Bodies.Add(new SnakeBody(this, LastTailPosition.X, LastTailPosition.Y));
             }
 
-            this.OnSnakeMoved?.Invoke(this, EventArgs.Empty);
+            this.OnSnakeMoving?.Invoke(this, new OnSnakeMoving(this, LastTailPosition));
+
             if (IsSelfCollision()) // Check for collisions with itself
                 Die();
         }
