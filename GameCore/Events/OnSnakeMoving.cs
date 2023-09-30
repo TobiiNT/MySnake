@@ -1,4 +1,4 @@
-﻿using GameCore.Entities.Interfaces;
+﻿using GameCore.Entities.Interfaces.Snakes;
 using System;
 using System.Drawing;
 

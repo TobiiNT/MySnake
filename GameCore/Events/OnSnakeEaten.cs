@@ -1,7 +1,6 @@
-﻿using GameCore.Entities.Interfaces;
+﻿using GameCore.Entities.Interfaces.Snakes;
 using GameCore.Events.Interfaces;
 using System;
-using System.Drawing;
 
 namespace GameCore.Events
 {

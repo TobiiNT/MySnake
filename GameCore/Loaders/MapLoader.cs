@@ -1,5 +1,5 @@
 ﻿using GameCore.Entities.Implements.Games;
-using GameCore.Entities.Interfaces;
+using GameCore.Entities.Interfaces.Games;
 using System.Collections.Generic;
 using System.IO;
 

@@ -1,6 +1,8 @@
 ﻿using GameCore.Entities.Enums;
 using GameCore.Entities.Implements.Snakes;
-using GameCore.Entities.Interfaces;
+using GameCore.Entities.Interfaces.Controllers;
+using GameCore.Entities.Interfaces.Games;
+using GameCore.Entities.Interfaces.Snakes;
 using GameCore.Events;
 using GameCore.Loaders;
 using GameCore.Utilities;
@@ -12,9 +14,11 @@ using System.Threading;
 
 namespace GameCore.Entities.Implements.Games
 {
-    public class Map
+    public class Map : IMatrix
     {
         private MapLoader MapLoader { set; get; }
+        public int Width { get; }
+        public int Height { get; }
         private CellType[,] Matrix { set; get; }
         public List<Obstacle> Obstacles { private set; get; }
         public List<IFood> Foods { private set; get; }
@@ -23,10 +27,15 @@ namespace GameCore.Entities.Implements.Games
         
         private Thread MainThread { set; get; }
 
+      
+
+
         private const int SLEEP_DURATION = 100;
 
         public Map(int Rows, int Columns)
         {
+            this.Width = Rows;
+            this.Height = Columns;
             this.Matrix = new CellType[Rows, Columns];
 
             this.Obstacles = new List<Obstacle>();
@@ -43,7 +52,7 @@ namespace GameCore.Entities.Implements.Games
         {
             while (true)
             {
-                foreach (var Snake in this.SnakeList)
+                foreach (var Snake in this.SnakeList.ToList())
                 {
                     Snake.Move();
                 }

@@ -9,25 +9,25 @@ using System.Drawing;
 
 namespace GameCore.Entities.Implements.Controllers
 {
-    public class BfsController : ISnakeController, IHasPathAlgorithm
+    public class AStarController : ISnakeController, IHasPathAlgorithm
     {
         public Map Board { private set; get; }
-        public IPathAlgorithm PathAlgorithm { get;}
+        public IPathAlgorithm PathAlgorithm { get; }
 
-        public BfsController(Map Board)
+        public AStarController(Map Board)
         {
             this.Board = Board;
-            this.PathAlgorithm = new BfsAlgorithm(Board, CheckMoveablePosition, CheckGoalPosition);
+            this.PathAlgorithm = new AStarAlgorithm(Board, CheckMoveablePosition, CheckGoalPosition, CheckAvoidPosition);
         }
 
         public Direction GetNextMove(Snake Snake)
         {
             List<Point> ShortestPath = PathAlgorithm.FindPath(Snake.Head.Position);
-
+           
             // Have a path && the next point is not the head
-            if (ShortestPath != null && ShortestPath.Count > 1)
+            if (ShortestPath != null && ShortestPath.Count > 0)
             {
-                Point NextStep = ShortestPath[ShortestPath.Count - 2];
+                Point NextStep = ShortestPath[ShortestPath.Count - 1];
 
                 if (Snake.Head.Position.X > NextStep.X)
                     return Direction.LEFT;
@@ -52,6 +52,12 @@ namespace GameCore.Entities.Implements.Controllers
         {
             // Check if the position is food
             return Board.GetCellType(Position) == CellType.FOOD;
+        }
+
+        private bool CheckAvoidPosition(Point Position)
+        {
+            // Check if the position is empty or food
+            return Board.GetCellType(Position) != CellType.EMPTY;
         }
     }
 }

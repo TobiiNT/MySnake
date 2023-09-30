@@ -1,15 +1,16 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using GameCore.Entities.Enums;
 using GameCore.Utilities;
 using System.Linq;
-using GameCore.Entities.Interfaces;
 using GameCore.Entities.Implements.Snakes;
 using GameCore.Entities.Implements.Games;
 using GameCore.Entities.Implements.Controllers;
+using GameCore.Entities.Interfaces.Controllers;
+using GameCore.Entities.Interfaces.Games;
+using GameCore.Entities.Interfaces.Snakes;
 
 namespace MySnake
 {
@@ -46,7 +47,7 @@ namespace MySnake
         {
             while (true)
             {
-                foreach (var Snake in Map.SnakeList)
+                foreach (var Snake in Map.SnakeList.ToList())
                 {
                     Render.DrawSnake(this.Graphic, Snake);
                 }
@@ -72,8 +73,8 @@ namespace MySnake
             for (int i = 0; i < 2; i++)
             {
                 Position = GetRandomPosition();
-                ISnakeController Bfs = new BfsController(this.Map);
-                Snake NewBotSnake = this.Map.NewSnake(Position, Color.Blue, Bfs);
+                ISnakeController Algorithm = new BfsController(this.Map);
+                Snake NewBotSnake = this.Map.NewSnake(Position, Color.Blue, Algorithm);
                 Render.DrawSnake(this.Graphic, NewBotSnake);
                 this.Map.ChangeCells(NewBotSnake.Bodies.Select(s => s.Position).ToList(), CellType.OBSTACLE);
                 Thread.Sleep(1);
@@ -101,7 +102,7 @@ namespace MySnake
             {
                 Render.Draw(this.Graphic, Object);
             }
-            foreach (Snake Snake in this.Map.SnakeList)
+            foreach (ISnake Snake in this.Map.SnakeList)
             {
                 Render.DrawSnake(this.Graphic, Snake);
             }
@@ -186,7 +187,7 @@ namespace MySnake
         }
         private void btnFindPath_Click(object sender, EventArgs e)
         {
-            foreach (Snake Snake in this.Map.SnakeList.Where(i => i.Controller is BfsController))
+            foreach (Snake Snake in this.Map.SnakeList.Where(i => i.Controller != PlayerController))
             {
                 Snake.ChangeState(SnakeState.MOVING);
                 Snake.ChangeSpeed((int)this.NumericSpeed.Value);

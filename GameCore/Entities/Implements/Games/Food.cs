@@ -1,5 +1,5 @@
-﻿using GameCore.Entities.Interfaces;
-using GameCore.Events;
+﻿using GameCore.Entities.Interfaces.Games;
+using GameCore.Entities.Interfaces.Snakes;
 using System;
 using System.Drawing;
 

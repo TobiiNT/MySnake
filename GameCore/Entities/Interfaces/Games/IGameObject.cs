@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace GameCore.Entities.Interfaces
+namespace GameCore.Entities.Interfaces.Games
 {
     public interface IGameObject : IDrawable, IDisposable
     {

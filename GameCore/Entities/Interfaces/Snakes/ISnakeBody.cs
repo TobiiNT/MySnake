@@ -1,6 +1,7 @@
-﻿using System.Drawing;
+﻿using GameCore.Entities.Interfaces.Games;
+using System.Drawing;
 
-namespace GameCore.Entities.Interfaces
+namespace GameCore.Entities.Interfaces.Snakes
 {
     public interface ISnakeBody : IGameObject
     {

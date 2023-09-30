@@ -1,6 +1,7 @@
 ﻿using GameCore.Entities.Enums;
 using GameCore.Entities.Implements.Games;
-using GameCore.Entities.Interfaces;
+using GameCore.Entities.Interfaces.Controllers;
+using GameCore.Entities.Interfaces.Snakes;
 using GameCore.Events;
 using System;
 using System.Collections.Generic;

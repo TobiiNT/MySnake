@@ -1,6 +1,6 @@
 ﻿using GameCore.Entities.Enums;
 using GameCore.Entities.Implements.Snakes;
-using GameCore.Entities.Interfaces;
+using GameCore.Entities.Interfaces.Controllers;
 using System;
 
 namespace GameCore.Entities.Implements.Controllers

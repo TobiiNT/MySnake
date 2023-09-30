@@ -1,4 +1,4 @@
-﻿using GameCore.Entities.Interfaces;
+﻿using GameCore.Entities.Interfaces.Games;
 using System;
 using System.Drawing;
 

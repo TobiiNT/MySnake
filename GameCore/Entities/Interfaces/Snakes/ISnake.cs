@@ -1,8 +1,10 @@
 ﻿using GameCore.Entities.Enums;
+using GameCore.Entities.Interfaces.Controllers;
+using GameCore.Entities.Interfaces.Games;
 using System;
 using System.Collections.Generic;
 
-namespace GameCore.Entities.Interfaces
+namespace GameCore.Entities.Interfaces.Snakes
 {
     public interface ISnake : IGameObject
     {
