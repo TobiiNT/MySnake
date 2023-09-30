@@ -9,45 +9,43 @@ namespace MySnake
     {
         private static object LockObject = new object();
 
-        public static void Draw(Graphics g, Point p, Pen pen, Brush brush, int Width = 20, int Radius = 3)
+        public static void Draw(Graphics Graphic, IGameObject Object)
+        {
+            Draw(Graphic, new Point(Object.Position.X * Constants.BlockSize, Object.Position.Y * Constants.BlockSize), Object.Border, Object.Color, Constants.BlockSize, Object.BorderWidth);
+        }
+
+        public static void DrawSnake(Graphics Graphic, ISnake Snake)
+        {
+            Draw(Graphic, Snake.Head);
+            for (int i = 1; i < Snake.Length; i++)
+                Draw(Graphic, Snake.Bodies[i]);
+
+        }
+
+        private static void Draw(Graphics Graphic, Point Point, Pen Pen, Brush Brush, int Width, int Radius)
         {
             try
             {
                 lock (LockObject)
                 {
-                    GraphicsPath gp = new GraphicsPath();
-                    gp.AddLine(p.X + Radius, p.Y, p.X + Width - (Radius * 2), p.Y);
-                    gp.AddArc(p.X + Width - (Radius * 2), p.Y, Radius * 2, Radius * 2, 270, 90);
-                    gp.AddLine(p.X + Width, p.Y + Radius, p.X + Width, p.Y + Width - (Radius * 2));
-                    gp.AddArc(p.X + Width - (Radius * 2), p.Y + Width - (Radius * 2), Radius * 2, Radius * 2, 0, 90);
-                    gp.AddLine(p.X + Width - (Radius * 2), p.Y + Width, p.X + Radius, p.Y + Width);
-                    gp.AddArc(p.X, p.Y + Width - (Radius * 2), Radius * 2, Radius * 2, 90, 90);
-                    gp.AddLine(p.X, p.Y + Width - (Radius * 2), p.X, p.Y + Radius);
-                    gp.AddArc(p.X, p.Y, Radius * 2, Radius * 2, 180, 90);
+                    GraphicsPath GraphicPath = new GraphicsPath();
+                    GraphicPath.AddLine(Point.X + Radius, Point.Y, Point.X + Width - (Radius * 2), Point.Y);
+                    GraphicPath.AddArc(Point.X + Width - (Radius * 2), Point.Y, Radius * 2, Radius * 2, 270, 90);
+                    GraphicPath.AddLine(Point.X + Width, Point.Y + Radius, Point.X + Width, Point.Y + Width - (Radius * 2));
+                    GraphicPath.AddArc(Point.X + Width - (Radius * 2), Point.Y + Width - (Radius * 2), Radius * 2, Radius * 2, 0, 90);
+                    GraphicPath.AddLine(Point.X + Width - (Radius * 2), Point.Y + Width, Point.X + Radius, Point.Y + Width);
+                    GraphicPath.AddArc(Point.X, Point.Y + Width - (Radius * 2), Radius * 2, Radius * 2, 90, 90);
+                    GraphicPath.AddLine(Point.X, Point.Y + Width - (Radius * 2), Point.X, Point.Y + Radius);
+                    GraphicPath.AddArc(Point.X, Point.Y, Radius * 2, Radius * 2, 180, 90);
 
-                    gp.CloseFigure();
-                    g.FillPath(brush, gp);
-                    g.DrawPath(pen, gp);
-                    gp.Dispose();
+                    GraphicPath.CloseFigure();
+                    Graphic.FillPath(Brush, GraphicPath);
+                    Graphic.DrawPath(Pen, GraphicPath);
+                    GraphicPath.Dispose();
                 }
 
             }
             catch { }
-        }
-
-        private static int Size = 20;
-
-        public static void Draw(Graphics Graphic, IGameObject Object)
-        {
-            Render.Draw(Graphic, new Point(Object.Position.X * Size, Object.Position.Y * Size), Object.Border, Object.Color, Size, Object.BorderWidth);
-        }
-
-        public static void DrawSnake(Graphics Graphic, ISnake Snake)
-        {
-            Render.Draw(Graphic, Snake.Head);
-            for (int i = 1; i < Snake.Length; i++)
-                Render.Draw(Graphic, Snake.Bodies[i]);
-
         }
     }
 }

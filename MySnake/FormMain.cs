@@ -27,7 +27,7 @@ namespace MySnake
         public FormMain()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
+            this.DoubleBuffered = false;
             this.Graphic = this.MainPanel.CreateGraphics();
 
 

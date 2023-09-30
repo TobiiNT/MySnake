@@ -45,6 +45,7 @@
     <Compile Include="Entities\Enums\CellType.cs" />
     <Compile Include="Entities\Enums\SnakeState.cs" />
     <Compile Include="Entities\Enums\Direction.cs" />
+    <Compile Include="Entities\Implements\Algorithms\AStarAlgorithm.cs" />
     <Compile Include="Entities\Implements\Algorithms\BfsAlgorithm.cs" />
     <Compile Include="Entities\Implements\Controllers\AStarController.cs" />
     <Compile Include="Entities\Implements\Controllers\BfsController.cs" />
