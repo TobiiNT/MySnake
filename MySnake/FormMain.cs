@@ -80,12 +80,15 @@ namespace MySnake
             {
                 OpenGL.DrawObject(Obstacle);
             }
-            for (int i = 0; i < Map.GetMatrix().GetLength(0); i++)
+            if (this.CheckShowObstacleBorder.Checked)
             {
-                for (int j = 0; j < Map.GetMatrix().GetLength(1); j++)
+                for (int i = 0; i < Map.GetMatrix().GetLength(0); i++)
                 {
-                    if (Map.GetCellType(new Point(i, j)) == CellType.OBSTACLE)
-                        OpenGL.DrawObject(new Obstacle(i, j));
+                    for (int j = 0; j < Map.GetMatrix().GetLength(1); j++)
+                    {
+                        if (Map.GetCellType(new Point(i, j)) == CellType.OBSTACLE)
+                            OpenGL.DrawObject(new Obstacle(i, j));
+                    }
                 }
             }
         }
@@ -100,7 +103,7 @@ namespace MySnake
 
         private void DrawSnakes()
         {
-            foreach (var Snake in Map.SnakeList.Where(s => s.State < SnakeState.DIE))
+            foreach (var Snake in Map.SnakeList.Where(s =>  s.State <= (this.CheckShowDeadSnake.Checked ? SnakeState.DIE : SnakeState.MOVING)))
             {
                 OpenGL.DrawObject(Snake.Head);
                 for (int i = 1; i < Snake.Length; i++)
@@ -116,7 +119,7 @@ namespace MySnake
             this.Map.ResetSnakes();
             this.OpenGL = new OpenGL(this.Map, Color.White);
 
-            for (int i = 0; i <= this.NumericBotCount.Value; i++)
+            for (int i = this.CheckHasPlayer.Checked ? 0 : 1; i <= this.NumericBotCount.Value; i++)
             {
                 ISnakeController Controller;
                 Color RandomColor;
@@ -127,7 +130,7 @@ namespace MySnake
                 }
                 else
                 {
-                    Controller = new AlmightyMoveController(this.Map);
+                    Controller = new BfsController(this.Map);
                     RandomColor = Randomizer.GetRandomObject(new List<Color>() { Color.Blue, Color.Violet, Color.Pink, Color.Purple, Color.Gray });
                 }
                 Direction Direction = Randomizer.GetRandomObjectInEnums<Direction>();

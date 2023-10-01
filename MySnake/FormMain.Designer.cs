@@ -43,8 +43,13 @@
             this.lblGameSpeed = new System.Windows.Forms.Label();
             this.lblBotCount = new System.Windows.Forms.Label();
             this.NumericBotCount = new System.Windows.Forms.NumericUpDown();
+            this.CheckHasPlayer = new System.Windows.Forms.CheckBox();
+            this.GroupDisplay = new System.Windows.Forms.GroupBox();
+            this.CheckShowDeadSnake = new System.Windows.Forms.CheckBox();
+            this.CheckShowObstacleBorder = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericBotCount)).BeginInit();
+            this.GroupDisplay.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStartSnakeMoving
@@ -202,11 +207,56 @@
             0,
             0});
             // 
+            // CheckHasPlayer
+            // 
+            this.CheckHasPlayer.AutoSize = true;
+            this.CheckHasPlayer.Location = new System.Drawing.Point(1165, 63);
+            this.CheckHasPlayer.Name = "CheckHasPlayer";
+            this.CheckHasPlayer.Size = new System.Drawing.Size(110, 23);
+            this.CheckHasPlayer.TabIndex = 17;
+            this.CheckHasPlayer.Text = "Has Player?";
+            this.CheckHasPlayer.UseVisualStyleBackColor = true;
+            // 
+            // GroupDisplay
+            // 
+            this.GroupDisplay.Controls.Add(this.CheckShowObstacleBorder);
+            this.GroupDisplay.Controls.Add(this.CheckShowDeadSnake);
+            this.GroupDisplay.Location = new System.Drawing.Point(881, 361);
+            this.GroupDisplay.Name = "GroupDisplay";
+            this.GroupDisplay.Size = new System.Drawing.Size(394, 221);
+            this.GroupDisplay.TabIndex = 18;
+            this.GroupDisplay.TabStop = false;
+            this.GroupDisplay.Text = "Display";
+            // 
+            // CheckShowDeadSnake
+            // 
+            this.CheckShowDeadSnake.AutoSize = true;
+            this.CheckShowDeadSnake.Location = new System.Drawing.Point(6, 26);
+            this.CheckShowDeadSnake.Name = "CheckShowDeadSnake";
+            this.CheckShowDeadSnake.Size = new System.Drawing.Size(159, 23);
+            this.CheckShowDeadSnake.TabIndex = 19;
+            this.CheckShowDeadSnake.Text = "Show dead snake?";
+            this.CheckShowDeadSnake.UseVisualStyleBackColor = true;
+            // 
+            // CheckShowObstacleBorder
+            // 
+            this.CheckShowObstacleBorder.AutoSize = true;
+            this.CheckShowObstacleBorder.Checked = true;
+            this.CheckShowObstacleBorder.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckShowObstacleBorder.Location = new System.Drawing.Point(6, 55);
+            this.CheckShowObstacleBorder.Name = "CheckShowObstacleBorder";
+            this.CheckShowObstacleBorder.Size = new System.Drawing.Size(189, 23);
+            this.CheckShowObstacleBorder.TabIndex = 20;
+            this.CheckShowObstacleBorder.Text = "Show obstacle border?";
+            this.CheckShowObstacleBorder.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1290, 871);
+            this.Controls.Add(this.GroupDisplay);
+            this.Controls.Add(this.CheckHasPlayer);
             this.Controls.Add(this.NumericBotCount);
             this.Controls.Add(this.lblBotCount);
             this.Controls.Add(this.lblGameSpeed);
@@ -223,7 +273,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericBotCount)).EndInit();
+            this.GroupDisplay.ResumeLayout(false);
+            this.GroupDisplay.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -242,6 +295,10 @@
         private System.Windows.Forms.Label lblGameSpeed;
         private System.Windows.Forms.Label lblBotCount;
         private System.Windows.Forms.NumericUpDown NumericBotCount;
+        private System.Windows.Forms.CheckBox CheckHasPlayer;
+        private System.Windows.Forms.GroupBox GroupDisplay;
+        private System.Windows.Forms.CheckBox CheckShowDeadSnake;
+        private System.Windows.Forms.CheckBox CheckShowObstacleBorder;
     }
 }
 
