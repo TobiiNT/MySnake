@@ -103,9 +103,6 @@ namespace MySnake
             }
         }
 
-
-
-
         private void Reset()
         {
             this.Map = new Map(42, 42);
@@ -159,10 +156,6 @@ namespace MySnake
 
         private void MainTimer_Tick(object sender, EventArgs e)
         {
-            Snake PlayerSnake = this.Map.SnakeList.Where(s => s.Controller == this.PlayerController).FirstOrDefault();
-            if (PlayerSnake != null) this.lblPlayer_Score.Text = $"Điểm của người chơi: {PlayerSnake.Length}";
-
-
             this.TableBotStatus.Items.Clear();
             int Index = 1;
             foreach (Snake Snake in this.Map.SnakeList)

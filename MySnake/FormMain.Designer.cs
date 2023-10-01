@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.btnStartSnakeMoving = new System.Windows.Forms.Button();
-            this.lblPlayer_Score = new System.Windows.Forms.Label();
             this.MainTimer = new System.Windows.Forms.Timer(this.components);
             this.btnFindPath = new System.Windows.Forms.Button();
             this.NumericSpeed = new System.Windows.Forms.NumericUpDown();
@@ -54,16 +53,6 @@
             this.btnStartSnakeMoving.Text = "Start move";
             this.btnStartSnakeMoving.UseVisualStyleBackColor = true;
             this.btnStartSnakeMoving.Click += new System.EventHandler(this.btnStartSnakeMove_Click);
-            // 
-            // lblPlayer_Score
-            // 
-            this.lblPlayer_Score.AutoSize = true;
-            this.lblPlayer_Score.Location = new System.Drawing.Point(877, 43);
-            this.lblPlayer_Score.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblPlayer_Score.Name = "lblPlayer_Score";
-            this.lblPlayer_Score.Size = new System.Drawing.Size(166, 19);
-            this.lblPlayer_Score.TabIndex = 6;
-            this.lblPlayer_Score.Text = "Điểm của người chơi: ";
             // 
             // MainTimer
             // 
@@ -177,7 +166,6 @@
             this.Controls.Add(this.TableBotStatus);
             this.Controls.Add(this.NumericSpeed);
             this.Controls.Add(this.btnFindPath);
-            this.Controls.Add(this.lblPlayer_Score);
             this.Controls.Add(this.btnStartSnakeMoving);
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -186,13 +174,11 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.Button btnStartSnakeMoving;
-        private System.Windows.Forms.Label lblPlayer_Score;
         private System.Windows.Forms.Timer MainTimer;
         private System.Windows.Forms.Button btnFindPath;
         private System.Windows.Forms.NumericUpDown NumericSpeed;
