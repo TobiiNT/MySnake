@@ -6,6 +6,6 @@
 
         public static int BlockSize = 20;
 
-        public static int FPS = 30;
+        public static int FPS = 120;
     }
 }

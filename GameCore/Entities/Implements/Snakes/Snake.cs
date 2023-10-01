@@ -43,11 +43,15 @@ namespace GameCore.Entities.Implements.Snakes
 
         public Color FillColor { private set; get; }
 
+        public event EventHandler<EventArgs> OnMoving;
+
+        public event EventHandler<EventArgs> OnDirectionChanged;
+
+        public event EventHandler<EventArgs> OnLengthChanged;
+
+        public event EventHandler<EventArgs> OnDied;
+
         public event EventHandler<EventArgs> OnDisposed;
-
-        public event EventHandler<EventArgs> OnSnakeMoving;
-
-        public event EventHandler<EventArgs> OnSnakeLengthChanged;
 
         public Snake(int X, int Y, Direction Direction, int StartLength)
         {
@@ -91,12 +95,14 @@ namespace GameCore.Entities.Implements.Snakes
 
         public void ChangeDirection(Direction Direction)
         {
-            if (this.Direction == Direction.LEFT && Direction != Direction.RIGHT ||
+            if (this.Direction != Direction &&
+                (this.Direction == Direction.LEFT && Direction != Direction.RIGHT ||
                 this.Direction == Direction.RIGHT && Direction != Direction.LEFT ||
                 this.Direction == Direction.UP && Direction != Direction.DOWN ||
-                this.Direction == Direction.DOWN && Direction != Direction.UP)
+                this.Direction == Direction.DOWN && Direction != Direction.UP))
             {
                 this.Direction = Direction;
+                this.OnDirectionChanged?.Invoke(this, new OnSnakeDirectionChanged(this, Direction));
             }
         }
 
@@ -144,10 +150,10 @@ namespace GameCore.Entities.Implements.Snakes
             {
                 PendingBodies--;
                 Bodies.Add(new SnakeBody(this, LastTailPosition.X, LastTailPosition.Y));
-                this.OnSnakeLengthChanged?.Invoke(this, new OnSnakeLengthChanged(this, this.Bodies.Count));
+                this.OnLengthChanged?.Invoke(this, new OnSnakeLengthChanged(this, this.Bodies.Count));
             }
 
-            this.OnSnakeMoving?.Invoke(this, new OnSnakeMoving(this, LastTailPosition));
+            this.OnMoving?.Invoke(this, new OnSnakeMoving(this, LastTailPosition));
 
             if (IsSelfCollision()) // Check for collisions with itself
                 Die();
@@ -176,6 +182,7 @@ namespace GameCore.Entities.Implements.Snakes
         public void Die()
         {
             this.ChangeState(SnakeState.DIE);
+            this.OnDied?.Invoke(this, new OnSnakeDied(this));
         }
 
         public void Dispose()

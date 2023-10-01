@@ -30,7 +30,9 @@ namespace GameCore.Entities.Interfaces.Snakes
         int PendingBodies { get; }
         void AddLength(int Length);
     
-        event EventHandler<EventArgs> OnSnakeMoving;
-        event EventHandler<EventArgs> OnSnakeLengthChanged; 
+        event EventHandler<EventArgs> OnMoving;
+        event EventHandler<EventArgs> OnDirectionChanged; 
+        event EventHandler<EventArgs> OnLengthChanged; 
+        event EventHandler<EventArgs> OnDied; 
     }
 }

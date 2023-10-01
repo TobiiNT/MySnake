@@ -14,12 +14,10 @@ namespace GameCore.Entities.Implements.Games
         public Color BorderColor => Color.LightCyan; 
         public Color FillColor => Color.MediumSeaGreen;
 
-
         public Obstacle(int X, int Y)
         {
             this.Position = new Point(X, Y);
         }
-
 
         public void Dispose()
         {

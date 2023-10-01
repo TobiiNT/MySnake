@@ -46,8 +46,10 @@
     <Compile Include="Entities\Enums\SnakeState.cs" />
     <Compile Include="Entities\Enums\Direction.cs" />
     <Compile Include="Entities\Implements\Algorithms\AStarAlgorithm.cs" />
+    <Compile Include="Entities\Implements\Algorithms\AlmightyMoveAlgorithm.cs" />
     <Compile Include="Entities\Implements\Algorithms\BfsAlgorithm.cs" />
     <Compile Include="Entities\Implements\Controllers\AStarController.cs" />
+    <Compile Include="Entities\Implements\Controllers\AlmightyMoveController.cs" />
     <Compile Include="Entities\Implements\Controllers\BfsController.cs" />
     <Compile Include="Entities\Implements\Controllers\PlayerController.cs" />
     <Compile Include="Entities\Interfaces\Algorithms\IHasPathAlgorithm.cs" />
@@ -66,7 +68,9 @@
     <Compile Include="Entities\Implements\Games\Map.cs" />
     <Compile Include="Entities\Implements\Snakes\Snake.cs" />
     <Compile Include="Events\Interfaces\ISnakeEvent.cs" />
-    <Compile Include="Events\OnSnakeEaten.cs" />
+    <Compile Include="Events\OnSnakeLengthChanged.cs" />
+    <Compile Include="Events\OnSnakeDied.cs" />
+    <Compile Include="Events\OnSnakeDirectionChanged.cs" />
     <Compile Include="Events\OnSnakeMoving.cs" />
     <Compile Include="Loaders\MapLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

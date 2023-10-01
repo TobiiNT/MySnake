@@ -24,13 +24,12 @@ namespace GameCore.Entities.Implements.Games
         public List<IFood> Foods { private set; get; }
 
         public List<Snake> SnakeList { private set; get; }
-        
         private Thread MainThread { set; get; }
 
-      
+        public CellType[,] GetMatrix() => Matrix;
 
 
-        private const int SLEEP_DURATION = 100;
+        private const int SLEEP_DURATION = 1;
 
         public Map(int Rows, int Columns)
         {
@@ -145,9 +144,27 @@ namespace GameCore.Entities.Implements.Games
             this.ChangeCells(NewSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
             this.SnakeList.Add(NewSnake);
             //NewSnake.OnDisposed += NewSnake_OnDisposed;
-            NewSnake.OnSnakeMoving += NewSnake_OnSnakeMoving;
-            NewSnake.OnSnakeLengthChanged += NewSnake_OnSnakeLengthChanged;
+            NewSnake.OnMoving += NewSnake_OnSnakeMoving;
+            NewSnake.OnDirectionChanged += NewSnake_OnSnakeDirectionChanged;
+            NewSnake.OnLengthChanged += NewSnake_OnSnakeLengthChanged;
+            NewSnake.OnDied += NewSnake_OnSnakeDied;
             return NewSnake;
+        }
+
+        private void NewSnake_OnSnakeDirectionChanged(object sender, EventArgs e)
+        {
+            if (e is OnSnakeDirectionChanged DirectionChangedEvent)
+            {
+                
+            }
+        }
+
+        private void NewSnake_OnSnakeDied(object sender, EventArgs e)
+        {
+            if (e is OnSnakeDied DiedEvent)
+            {
+                this.ChangeCells(DiedEvent.Snake.Bodies.Select(i => i.Position).ToList(), CellType.EMPTY);
+            }
         }
 
         private void NewSnake_OnSnakeLengthChanged(object sender, EventArgs e)
@@ -166,6 +183,10 @@ namespace GameCore.Entities.Implements.Games
 
                 CellType HeadPosition = GetCellType(CurrentSnake.Head.Position);
 
+                ChangeCell(MoveEvent.LastTailPosition, CellType.EMPTY);
+                ChangeCells(CurrentSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
+
+
                 if (HeadPosition == CellType.OBSTACLE) //đụng vật cản
                 {
                     CurrentSnake.Die();
@@ -178,9 +199,6 @@ namespace GameCore.Entities.Implements.Games
                         AddNewFood();
                     }
                 }
-
-                ChangeCell(MoveEvent.LastTailPosition, CellType.EMPTY);
-                ChangeCells(CurrentSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
             }
         }
 

@@ -12,6 +12,7 @@ using GameCore.Entities.Interfaces.Controllers;
 using GameCore.Entities.Interfaces.Games;
 using GameCore.Entities.Interfaces.Snakes;
 using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 
 namespace MySnake
 {
@@ -32,10 +33,6 @@ namespace MySnake
             this.GraphicControl.Paint += GraphicControl_Paint;
 
             this.PlayerController = new PlayerController();
-            this.PlayerController.OnDirectionInput += Direction =>
-            {
-                Console.WriteLine($"Direction changed to: {Direction}");
-            };
 
             Reset();
 
@@ -83,6 +80,14 @@ namespace MySnake
             {
                 OpenGL.DrawObject(Obstacle);
             }
+            for (int i = 0; i < Map.GetMatrix().GetLength(0); i++)
+            {
+                for (int j = 0; j < Map.GetMatrix().GetLength(1); j++)
+                {
+                    if (Map.GetCellType(new Point(i, j)) == CellType.OBSTACLE)
+                        OpenGL.DrawObject(new Obstacle(i, j));
+                }
+            }
         }
 
         private void DrawFoods()
@@ -108,19 +113,27 @@ namespace MySnake
             this.Map = new Map(42, 42);
             this.Map.LoadMap("level1.lev");
             this.Map.AddNewFood();
-            this.Map.AddNewFood();
             this.Map.ResetSnakes();
             this.OpenGL = new OpenGL(this.Map, Color.White);
 
-            Direction RandomDirection = Randomizer.GetRandomObjectInEnums<Direction>();
-            this.Map.NewSnake(Map.GetSnakeStartPosition(Constants.SnakeInitSize, RandomDirection), RandomDirection, Color.Green, this.PlayerController);
-
-            for (int i = 1; i <= 5; i++)
+            for (int i = 0; i <= this.NumericBotCount.Value; i++)
             {
-                RandomDirection = Randomizer.GetRandomObjectInEnums<Direction>();
-                ISnakeController Algorithm = new BfsController(this.Map);
-                Color RandomColor = Randomizer.GetRandomObjectInType<Color>(typeof(Color));
-                this.Map.NewSnake(Map.GetSnakeStartPosition(Constants.SnakeInitSize, RandomDirection), RandomDirection, RandomColor, Algorithm);
+                ISnakeController Controller;
+                Color RandomColor;
+                if (i == 0)
+                {
+                    Controller = this.PlayerController;
+                    RandomColor = Color.Green;
+                }
+                else
+                {
+                    Controller = new AlmightyMoveController(this.Map);
+                    RandomColor = Randomizer.GetRandomObject(new List<Color>() { Color.Blue, Color.Violet, Color.Pink, Color.Purple, Color.Gray });
+                }
+                Direction Direction = Randomizer.GetRandomObjectInEnums<Direction>();
+                ISnake Snake = this.Map.NewSnake(Map.GetSnakeStartPosition(Constants.SnakeInitSize, Direction), Direction, RandomColor, Controller);
+                Snake.ChangeSpeed(1000 / (int)this.NumericSpeed.Value);
+
                 Thread.Sleep(1);
             }
         }
@@ -142,12 +155,12 @@ namespace MySnake
                     break;
                 case Keys.Up:
                 case Keys.W:
-                    this.PlayerController.SetDirection(Direction.UP);
+                    this.PlayerController.SetDirection(Direction.DOWN);
                     IsHandled = true;
                     break;
                 case Keys.Down:
                 case Keys.S:
-                    this.PlayerController.SetDirection(Direction.DOWN);
+                    this.PlayerController.SetDirection(Direction.UP);
                     IsHandled = true;
                     break;
             }
@@ -176,7 +189,7 @@ namespace MySnake
         {
             foreach (Snake Snake in this.Map.SnakeList)
             {
-                Snake.ChangeSpeed((int)this.NumericSpeed.Value);
+                Snake.ChangeSpeed(1000 / (int)this.NumericSpeed.Value);
             }
         }
 
@@ -199,7 +212,7 @@ namespace MySnake
             foreach (Snake Snake in this.Map.SnakeList.Where(i => i.Controller != PlayerController))
             {
                 Snake.ChangeState(SnakeState.MOVING);
-                Snake.ChangeSpeed((int)this.NumericSpeed.Value);
+                Snake.ChangeSpeed(1000 /(int)this.NumericSpeed.Value);
             }
         }
         private void btnRestart_Click(object sender, EventArgs e)

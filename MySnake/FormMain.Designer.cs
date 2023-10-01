@@ -35,22 +35,26 @@
             this.NumericSpeed = new System.Windows.Forms.NumericUpDown();
             this.TableBotStatus = new System.Windows.Forms.ListView();
             this.colNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colController = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colLength = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnRestart = new System.Windows.Forms.Button();
             this.GraphicControl = new OpenTK.GLControl();
-            this.colController = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lblGameSpeed = new System.Windows.Forms.Label();
+            this.lblBotCount = new System.Windows.Forms.Label();
+            this.NumericBotCount = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericBotCount)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStartSnakeMoving
             // 
-            this.btnStartSnakeMoving.Location = new System.Drawing.Point(881, 139);
+            this.btnStartSnakeMoving.Location = new System.Drawing.Point(1165, 94);
             this.btnStartSnakeMoving.Margin = new System.Windows.Forms.Padding(4);
             this.btnStartSnakeMoving.Name = "btnStartSnakeMoving";
             this.btnStartSnakeMoving.Size = new System.Drawing.Size(112, 34);
             this.btnStartSnakeMoving.TabIndex = 5;
-            this.btnStartSnakeMoving.Text = "Start move";
+            this.btnStartSnakeMoving.Text = "Start player";
             this.btnStartSnakeMoving.UseVisualStyleBackColor = true;
             this.btnStartSnakeMoving.Click += new System.EventHandler(this.btnStartSnakeMove_Click);
             // 
@@ -61,33 +65,34 @@
             // 
             // btnFindPath
             // 
-            this.btnFindPath.Location = new System.Drawing.Point(881, 181);
+            this.btnFindPath.Location = new System.Drawing.Point(1040, 94);
             this.btnFindPath.Margin = new System.Windows.Forms.Padding(4);
             this.btnFindPath.Name = "btnFindPath";
             this.btnFindPath.Size = new System.Drawing.Size(112, 34);
             this.btnFindPath.TabIndex = 8;
-            this.btnFindPath.Text = "Find Path";
+            this.btnFindPath.Text = "Start bot";
             this.btnFindPath.UseVisualStyleBackColor = true;
             this.btnFindPath.Click += new System.EventHandler(this.btnFindPath_Click);
             // 
             // NumericSpeed
             // 
-            this.NumericSpeed.Location = new System.Drawing.Point(881, 105);
+            this.NumericSpeed.Location = new System.Drawing.Point(1040, 27);
             this.NumericSpeed.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.NumericSpeed.Minimum = new decimal(new int[] {
-            10,
+            1,
             0,
             0,
             0});
             this.NumericSpeed.Name = "NumericSpeed";
             this.NumericSpeed.Size = new System.Drawing.Size(112, 27);
             this.NumericSpeed.TabIndex = 9;
+            this.NumericSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericSpeed.Value = new decimal(new int[] {
-            500,
+            1,
             0,
             0,
             0});
@@ -104,7 +109,7 @@
             this.TableBotStatus.GridLines = true;
             this.TableBotStatus.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.TableBotStatus.HideSelection = false;
-            this.TableBotStatus.Location = new System.Drawing.Point(881, 222);
+            this.TableBotStatus.Location = new System.Drawing.Point(881, 135);
             this.TableBotStatus.Name = "TableBotStatus";
             this.TableBotStatus.Size = new System.Drawing.Size(394, 220);
             this.TableBotStatus.TabIndex = 11;
@@ -116,15 +121,27 @@
             this.colNumber.Text = "#";
             this.colNumber.Width = 30;
             // 
+            // colController
+            // 
+            this.colController.Text = "Controller";
+            this.colController.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colController.Width = 150;
+            // 
             // colLength
             // 
             this.colLength.Text = "Length";
             this.colLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.colLength.Width = 100;
             // 
+            // colStatus
+            // 
+            this.colStatus.Text = "Status";
+            this.colStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colStatus.Width = 100;
+            // 
             // btnRestart
             // 
-            this.btnRestart.Location = new System.Drawing.Point(1001, 139);
+            this.btnRestart.Location = new System.Drawing.Point(881, 94);
             this.btnRestart.Margin = new System.Windows.Forms.Padding(4);
             this.btnRestart.Name = "btnRestart";
             this.btnRestart.Size = new System.Drawing.Size(112, 34);
@@ -144,23 +161,55 @@
             this.GraphicControl.TabIndex = 13;
             this.GraphicControl.VSync = false;
             // 
-            // colController
+            // lblGameSpeed
             // 
-            this.colController.Text = "Controller";
-            this.colController.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colController.Width = 150;
+            this.lblGameSpeed.Location = new System.Drawing.Point(877, 27);
+            this.lblGameSpeed.Name = "lblGameSpeed";
+            this.lblGameSpeed.Size = new System.Drawing.Size(157, 27);
+            this.lblGameSpeed.TabIndex = 14;
+            this.lblGameSpeed.Text = "Game speed:";
+            this.lblGameSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // colStatus
+            // lblBotCount
             // 
-            this.colStatus.Text = "Status";
-            this.colStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colStatus.Width = 100;
+            this.lblBotCount.Location = new System.Drawing.Point(877, 60);
+            this.lblBotCount.Name = "lblBotCount";
+            this.lblBotCount.Size = new System.Drawing.Size(157, 27);
+            this.lblBotCount.TabIndex = 15;
+            this.lblBotCount.Text = "Bot count:";
+            this.lblBotCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // NumericBotCount
+            // 
+            this.NumericBotCount.Location = new System.Drawing.Point(1040, 60);
+            this.NumericBotCount.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.NumericBotCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NumericBotCount.Name = "NumericBotCount";
+            this.NumericBotCount.Size = new System.Drawing.Size(112, 27);
+            this.NumericBotCount.TabIndex = 16;
+            this.NumericBotCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.NumericBotCount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1281, 871);
+            this.ClientSize = new System.Drawing.Size(1290, 871);
+            this.Controls.Add(this.NumericBotCount);
+            this.Controls.Add(this.lblBotCount);
+            this.Controls.Add(this.lblGameSpeed);
             this.Controls.Add(this.GraphicControl);
             this.Controls.Add(this.btnRestart);
             this.Controls.Add(this.TableBotStatus);
@@ -173,6 +222,7 @@
             this.Text = "My Snake";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericBotCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -189,6 +239,9 @@
         private OpenTK.GLControl GraphicControl;
         private System.Windows.Forms.ColumnHeader colController;
         private System.Windows.Forms.ColumnHeader colStatus;
+        private System.Windows.Forms.Label lblGameSpeed;
+        private System.Windows.Forms.Label lblBotCount;
+        private System.Windows.Forms.NumericUpDown NumericBotCount;
     }
 }
 
