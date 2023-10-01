@@ -10,7 +10,7 @@ namespace GameCore.Entities.Implements.Games
         public Point Position { private set; get; }
         public event EventHandler<EventArgs> OnDisposed;
 
-        public float Size => 0.8f;
+        public float Size => 0.5f;
         public int BorderWidth => 7;
         public Color BorderColor => Color.Blue; 
         public Color FillColor => Color.Orange;

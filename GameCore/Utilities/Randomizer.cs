@@ -69,11 +69,17 @@ namespace GameCore.Utilities
 
             return (T)Convert.ChangeType(RandomObject, typeof(T));
         }
-        public static T GetRandomObjectInEnums<T>(Type Type)
+        public static T GetRandomObjectInEnums<T>() where T : Enum
         {
-            PropertyInfo[] Properties = Type.GetProperties();
+            Array Values = Enum.GetValues(typeof(T));
 
-            return (T)Properties[Next(Properties.Length - 2)].GetValue(null, null);
+            return (T)Values.GetValue(Next(Values.Length - 2));
+        }
+        public static T GetRandomObjectInType<T>(Type Type)
+        {
+            PropertyInfo[] Properties = Type.GetProperties().Where(i => i.PropertyType == Type).ToArray();
+            var Property = Properties[Next(Properties.Length - 2)];
+            return (T)Property.GetValue(null, null);
         }
     }
 }

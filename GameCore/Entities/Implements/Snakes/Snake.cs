@@ -103,7 +103,6 @@ namespace GameCore.Entities.Implements.Snakes
         public void ChangeSpeed(int Speed)
         {
             if (Speed > 0) this.MoveSpeed = Speed;
-            this.AddLength(1);
         }
 
         public void ChangeState(SnakeState State)

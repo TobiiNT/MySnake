@@ -97,7 +97,7 @@ namespace GameCore.Entities.Implements.Games
 
         private void SetCellValue(Point Cell, CellType Type)
         {
-            if (Cell == null || Cell.X >= Matrix.GetLength(0) || Cell.Y >= Matrix.GetLength(1))
+            if (Cell == null || Cell.X < 0 || Cell.Y < 0 || Cell.X >= Matrix.GetLength(0) || Cell.Y >= Matrix.GetLength(1))
                 throw new IndexOutOfRangeException();
 
             Matrix[Cell.X, Cell.Y] = Type;
@@ -136,12 +136,13 @@ namespace GameCore.Entities.Implements.Games
             this.SnakeList.Clear();
         }
 
-        public Snake NewSnake(Point Position, Color BodyColor, ISnakeController Controller)
+        public Snake NewSnake(Point Position, Direction Direction, Color BodyColor, ISnakeController Controller)
         {
-            Snake NewSnake = new Snake(Position.X, Position.Y, Direction.RIGHT, 3);
+            Snake NewSnake = new Snake(Position.X, Position.Y, Direction, 3);
             NewSnake.SetColor(Color.Black, BodyColor);
             NewSnake.SetController(Controller);
 
+            this.ChangeCells(NewSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
             this.SnakeList.Add(NewSnake);
             //NewSnake.OnDisposed += NewSnake_OnDisposed;
             NewSnake.OnSnakeMoving += NewSnake_OnSnakeMoving;
@@ -183,13 +184,43 @@ namespace GameCore.Entities.Implements.Games
             }
         }
 
-        public Point GetRandomPosition()
+        public Point GetSnakeStartPosition(int SnakeLength, Direction Direction)
         {
-            Point Position = new Point(Randomizer.Next(2, this.Width - 1), Randomizer.Next(2, this.Height - 1));
-            Thread.Sleep(1);
-            if (!this.IsCellAvailable(Position))
-                GetRandomPosition();
-            return Position;
+            Point StartPosition;
+
+            while (true) // Keep searching until a valid position is found.
+            {
+                StartPosition = new Point(Randomizer.Next(1, this.Width - 1), Randomizer.Next(1, this.Height - 1));
+
+                if (IsCellAvailable(StartPosition) && HasEnoughSpace(StartPosition, Direction, SnakeLength))
+                    break;
+
+                Thread.Sleep(1);
+            }
+
+            return StartPosition;
+        }
+
+        private bool HasEnoughSpace(Point Position, Direction Direction, int StartLength)
+        {
+            for (int i = 1; i <= StartLength; i++)
+            {
+                switch (Direction)
+                {
+                    case Direction.LEFT: Position.X++; break;
+                    case Direction.RIGHT: Position.X--; break;
+                    case Direction.UP: Position.Y++; break;
+                    case Direction.DOWN: Position.Y--; break;
+                }
+
+                if (Position.X < 0 || Position.X >= this.Width || Position.Y < 0 || Position.Y >= this.Height)
+                    return false;
+
+                if (!IsCellAvailable(Position))
+                    return false;
+            }
+
+            return true;
         }
 
         public void Dispose()

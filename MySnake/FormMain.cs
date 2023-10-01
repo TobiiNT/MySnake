@@ -95,7 +95,7 @@ namespace MySnake
 
         private void DrawSnakes()
         {
-            foreach (var Snake in Map.SnakeList)
+            foreach (var Snake in Map.SnakeList.Where(s => s.State < SnakeState.DIE))
             {
                 OpenGL.DrawObject(Snake.Head);
                 for (int i = 1; i < Snake.Length; i++)
@@ -103,7 +103,7 @@ namespace MySnake
             }
         }
 
-       
+
 
 
         private void Reset()
@@ -115,16 +115,15 @@ namespace MySnake
             this.Map.ResetSnakes();
             this.OpenGL = new OpenGL(this.Map, Color.White);
 
-            var Position = Map.GetRandomPosition();
-            Snake NewSnake = this.Map.NewSnake(Position, Color.Green, this.PlayerController);
-            this.Map.ChangeCells(NewSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
+            Direction RandomDirection = Randomizer.GetRandomObjectInEnums<Direction>();
+            this.Map.NewSnake(Map.GetSnakeStartPosition(Constants.SnakeInitSize, RandomDirection), RandomDirection, Color.Green, this.PlayerController);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 1; i <= 5; i++)
             {
-                Position = Map.GetRandomPosition();
+                RandomDirection = Randomizer.GetRandomObjectInEnums<Direction>();
                 ISnakeController Algorithm = new BfsController(this.Map);
-                Snake NewBotSnake = this.Map.NewSnake(Position, Color.Blue, Algorithm);
-                this.Map.ChangeCells(NewBotSnake.Bodies.Select(s => s.Position).ToList(), CellType.OBSTACLE);
+                Color RandomColor = Randomizer.GetRandomObjectInType<Color>(typeof(Color));
+                this.Map.NewSnake(Map.GetSnakeStartPosition(Constants.SnakeInitSize, RandomDirection), RandomDirection, RandomColor, Algorithm);
                 Thread.Sleep(1);
             }
         }
@@ -165,13 +164,18 @@ namespace MySnake
 
 
             this.TableBotStatus.Items.Clear();
+            int Index = 1;
             foreach (Snake Snake in this.Map.SnakeList)
             {
-                string[] items = new string[3];
-                items[0] = Snake.State.ToString();
-                items[1] = $"{Snake.Length}";
+                string[] Status = new string[]
+                {
+                    Index++.ToString(),
+                    Snake.Controller.GetType().Name,
+                    Snake.Length.ToString(),
+                    Snake.State.ToString(),
+                };
 
-                this.TableBotStatus.Items.Insert(this.TableBotStatus.Items.Count, new ListViewItem(items));
+                this.TableBotStatus.Items.Insert(this.TableBotStatus.Items.Count, new ListViewItem(Status));
             }
         }
 

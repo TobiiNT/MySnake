@@ -18,7 +18,21 @@ namespace MySnake
 
         public void DrawBackground()
         {
-            DrawRectangle(0, 0, Matrix.Width, Matrix.Height, BackgroundColor);
+            GL.Disable(EnableCap.Blend);
+            GL.Disable(EnableCap.Texture2D);
+
+            // Set the color for the rectangle fill
+            GL.Color3(BackgroundColor.R, BackgroundColor.G, BackgroundColor.B);
+
+            GL.Begin(PrimitiveType.Quads); // Change to Quads
+            GL.Vertex2(-1, 1); // Top left
+            GL.Vertex2(1, 1); // Top right
+            GL.Vertex2(1, -1); // Bottom right
+            GL.Vertex2(-1, -1); // Bottom left
+            GL.End();
+
+            // Reset color to default (white)
+            GL.Color3(1.0f, 1.0f, 1.0f);
         }
 
         public void DrawObject(IGameObject Object)
@@ -32,6 +46,8 @@ namespace MySnake
             Y = Y / Matrix.Height * 2 - 1;
             Width /= Matrix.Width;
             Height /= Matrix.Height;
+            float PaddingX = 1f / Matrix.Width - Width;
+            float PaddingY = 1f / Matrix.Width - Height;
 
             GL.Disable(EnableCap.Blend);
             GL.Disable(EnableCap.Texture2D);
@@ -40,10 +56,10 @@ namespace MySnake
             GL.Color3(Color.R, Color.G, Color.B);
 
             GL.Begin(PrimitiveType.Quads); // Change to Quads
-            GL.Vertex2(X, Y + Height * 2); // Top left
-            GL.Vertex2(X + Width * 2, Y + Height * 2); // Top right
-            GL.Vertex2(X + Width * 2, Y); // Bottom right
-            GL.Vertex2(X, Y); // Bottom left
+            GL.Vertex2(X + PaddingX, PaddingY + Y + Height * 2); // Top left
+            GL.Vertex2(X + PaddingX + Width * 2, PaddingY + Y + Height * 2); // Top right
+            GL.Vertex2(X + PaddingX + Width * 2, PaddingY + Y); // Bottom right
+            GL.Vertex2(X + PaddingX, PaddingY + Y); // Bottom left
             GL.End();
 
             // Reset color to default (white)
@@ -56,6 +72,8 @@ namespace MySnake
             Y = Y / Matrix.Height * 2 - 1;
             Width /= Matrix.Width;
             Height /= Matrix.Height;
+            float PaddingX = 1f / Matrix.Width - Width;
+            float PaddingY = 1f / Matrix.Width - Height;
 
             GL.Disable(EnableCap.Blend);
             GL.Disable(EnableCap.Texture2D);
@@ -63,10 +81,10 @@ namespace MySnake
             // Draw the border around the rectangle
             GL.Color3(Border.R, Border.G, Border.B);
             GL.Begin(PrimitiveType.LineLoop);
-            GL.Vertex2(X, Y + Height * 2); // Top left
-            GL.Vertex2(X + Width * 2, Y + Height * 2); // Top right
-            GL.Vertex2(X + Width * 2, Y); // Bottom right
-            GL.Vertex2(X, Y); // Bottom left
+            GL.Vertex2(X + PaddingX, PaddingY + Y + Height * 2); // Top left
+            GL.Vertex2(X + PaddingX + Width * 2, PaddingY + Y + Height * 2); // Top right
+            GL.Vertex2(X + PaddingX + Width * 2, PaddingY + Y); // Bottom right
+            GL.Vertex2(X + PaddingX, PaddingY + Y); // Bottom left
             GL.End();
 
             // Reset color to default (white)
