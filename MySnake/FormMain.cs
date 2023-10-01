@@ -23,6 +23,8 @@ namespace MySnake
 
         private Thread GraphicThread;
 
+        private OpenGL OpenGL;
+
         public FormMain()
         {
             InitializeComponent();
@@ -61,7 +63,9 @@ namespace MySnake
             GL.Enable(EnableCap.PointSmooth);
             GL.Enable(EnableCap.LineSmooth);
 
+            OpenGL.DrawBackground();
             this.DrawObstacles();
+            this.DrawFoods();
             this.DrawSnakes();
 
             ErrorCode Error = GL.GetError();
@@ -75,19 +79,32 @@ namespace MySnake
 
         private void DrawObstacles()
         {
-            TextureData Texture = this.TextureManager.GetMapTexture(TextureType.Npc);
             foreach (var Obstacle in Map.Obstacles)
             {
-                this.DrawTexture(Texture, Obstacle.Position.X, Obstacle.Position.Y);
+                OpenGL.DrawObject(Obstacle);
+            }
+        }
+
+        private void DrawFoods()
+        {
+            foreach (var Food in Map.Foods)
+            {
+                OpenGL.DrawObject(Food);
             }
         }
 
         private void DrawSnakes()
         {
-            throw new NotImplementedException();
+            foreach (var Snake in Map.SnakeList)
+            {
+                OpenGL.DrawObject(Snake.Head);
+                for (int i = 1; i < Snake.Length; i++)
+                    OpenGL.DrawObject(Snake.Bodies[i]);
+            }
         }
 
        
+
 
         private void Reset()
         {
@@ -96,6 +113,7 @@ namespace MySnake
             this.Map.AddNewFood();
             this.Map.AddNewFood();
             this.Map.ResetSnakes();
+            this.OpenGL = new OpenGL(this.Map, Color.White);
 
             var Position = Map.GetRandomPosition();
             Snake NewSnake = this.Map.NewSnake(Position, Color.Green, this.PlayerController);
@@ -195,6 +213,7 @@ namespace MySnake
         {
             this.GraphicThread?.Abort();
             this.GraphicThread = null;
+            this.Map.Dispose();
         }
     }
 }

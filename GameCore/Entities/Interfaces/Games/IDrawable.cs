@@ -4,8 +4,9 @@ namespace GameCore.Entities.Interfaces.Games
 {
     public interface IDrawable
     {
+        float Size { get; }
         int BorderWidth { get; }
-        Pen Border { get; }
-        Brush Color { get; }
+        Color BorderColor { get; }
+        Color FillColor { get; }
     }
 }

@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace GameCore.Entities.Implements.Games
 {
-    public class Map : IMatrix
+    public class Map : IMatrix, IDisposable
     {
         private MapLoader MapLoader { set; get; }
         public int Width { get; }
@@ -167,7 +167,7 @@ namespace GameCore.Entities.Implements.Games
 
                 if (HeadPosition == CellType.OBSTACLE) //đụng vật cản
                 {
-                    CurrentSnake.Dispose();
+                    CurrentSnake.Die();
                 }
                 else if (HeadPosition == CellType.FOOD)
                 {
@@ -190,6 +190,12 @@ namespace GameCore.Entities.Implements.Games
             if (!this.IsCellAvailable(Position))
                 GetRandomPosition();
             return Position;
+        }
+
+        public void Dispose()
+        {
+            this.MainThread?.Abort();
+            this.MainThread = null;
         }
     }
 }

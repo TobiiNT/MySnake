@@ -9,9 +9,11 @@ namespace GameCore.Entities.Implements.Games
         public Point Position { private set; get; }
         public event EventHandler<EventArgs> OnDisposed;
 
+        public float Size => 1f;
         public int BorderWidth => 1;
-        public Pen Border => Pens.LightCyan; 
-        public Brush Color => Brushes.MediumSeaGreen;
+        public Color BorderColor => Color.LightCyan; 
+        public Color FillColor => Color.MediumSeaGreen;
+
 
         public Obstacle(int X, int Y)
         {

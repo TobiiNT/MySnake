@@ -35,11 +35,13 @@ namespace GameCore.Entities.Implements.Snakes
 
         public DateTime LastMoveTime { private set; get; }
 
+        public float Size => 0.8f;
+
         public int BorderWidth => 5;
 
-        public Pen Border { private set; get; }
+        public Color BorderColor { private set; get; }
 
-        public Brush Color { private set; get; }
+        public Color FillColor { private set; get; }
 
         public event EventHandler<EventArgs> OnDisposed;
 
@@ -71,8 +73,8 @@ namespace GameCore.Entities.Implements.Snakes
 
         public void SetColor(Color Border, Color Body)
         {
-            this.Border = new Pen(Border);
-            this.Color = new SolidBrush(Body);
+            this.BorderColor = Border;
+            this.FillColor = Body;
         }
 
         public void SetController(ISnakeController Controller)

@@ -10,9 +10,10 @@ namespace GameCore.Entities.Implements.Snakes
         public Point Position { private set; get; }
         public event EventHandler<EventArgs> OnDisposed;
 
+        public float Size => this.Snake.Size;
         public int BorderWidth => this.Snake.BorderWidth;
-        public Pen Border => this.Snake.Border;
-        public Brush Color => this.Snake.Color;
+        public Color BorderColor => this.Snake.BorderColor;
+        public Color FillColor => this.Snake.FillColor;
 
         public SnakeBody(ISnake Snake, int X, int Y)
         {
