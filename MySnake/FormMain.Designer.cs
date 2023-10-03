@@ -29,9 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnStartSnakeMoving = new System.Windows.Forms.Button();
+            this.btnStartSnake = new System.Windows.Forms.Button();
             this.MainTimer = new System.Windows.Forms.Timer(this.components);
-            this.btnFindPath = new System.Windows.Forms.Button();
             this.NumericSpeed = new System.Windows.Forms.NumericUpDown();
             this.TableBotStatus = new System.Windows.Forms.ListView();
             this.colNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -45,39 +44,30 @@
             this.NumericBotCount = new System.Windows.Forms.NumericUpDown();
             this.CheckHasPlayer = new System.Windows.Forms.CheckBox();
             this.GroupDisplay = new System.Windows.Forms.GroupBox();
-            this.CheckShowDeadSnake = new System.Windows.Forms.CheckBox();
             this.CheckShowObstacleBorder = new System.Windows.Forms.CheckBox();
+            this.CheckShowDeadSnake = new System.Windows.Forms.CheckBox();
+            this.CheckStartPlayerSnake = new System.Windows.Forms.CheckBox();
+            this.CheckStartBotSnake = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NumericSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericBotCount)).BeginInit();
             this.GroupDisplay.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnStartSnakeMoving
+            // btnStartSnake
             // 
-            this.btnStartSnakeMoving.Location = new System.Drawing.Point(1165, 94);
-            this.btnStartSnakeMoving.Margin = new System.Windows.Forms.Padding(4);
-            this.btnStartSnakeMoving.Name = "btnStartSnakeMoving";
-            this.btnStartSnakeMoving.Size = new System.Drawing.Size(112, 34);
-            this.btnStartSnakeMoving.TabIndex = 5;
-            this.btnStartSnakeMoving.Text = "Start player";
-            this.btnStartSnakeMoving.UseVisualStyleBackColor = true;
-            this.btnStartSnakeMoving.Click += new System.EventHandler(this.btnStartSnakeMove_Click);
+            this.btnStartSnake.Location = new System.Drawing.Point(1040, 119);
+            this.btnStartSnake.Margin = new System.Windows.Forms.Padding(4);
+            this.btnStartSnake.Name = "btnStartSnake";
+            this.btnStartSnake.Size = new System.Drawing.Size(112, 34);
+            this.btnStartSnake.TabIndex = 5;
+            this.btnStartSnake.Text = "Start";
+            this.btnStartSnake.UseVisualStyleBackColor = true;
+            this.btnStartSnake.Click += new System.EventHandler(this.btnStartSnakeMove_Click);
             // 
             // MainTimer
             // 
             this.MainTimer.Enabled = true;
             this.MainTimer.Tick += new System.EventHandler(this.MainTimer_Tick);
-            // 
-            // btnFindPath
-            // 
-            this.btnFindPath.Location = new System.Drawing.Point(1040, 94);
-            this.btnFindPath.Margin = new System.Windows.Forms.Padding(4);
-            this.btnFindPath.Name = "btnFindPath";
-            this.btnFindPath.Size = new System.Drawing.Size(112, 34);
-            this.btnFindPath.TabIndex = 8;
-            this.btnFindPath.Text = "Start bot";
-            this.btnFindPath.UseVisualStyleBackColor = true;
-            this.btnFindPath.Click += new System.EventHandler(this.btnFindPath_Click);
             // 
             // NumericSpeed
             // 
@@ -114,9 +104,9 @@
             this.TableBotStatus.GridLines = true;
             this.TableBotStatus.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.TableBotStatus.HideSelection = false;
-            this.TableBotStatus.Location = new System.Drawing.Point(881, 135);
+            this.TableBotStatus.Location = new System.Drawing.Point(878, 160);
             this.TableBotStatus.Name = "TableBotStatus";
-            this.TableBotStatus.Size = new System.Drawing.Size(394, 220);
+            this.TableBotStatus.Size = new System.Drawing.Size(400, 220);
             this.TableBotStatus.TabIndex = 11;
             this.TableBotStatus.UseCompatibleStateImageBehavior = false;
             this.TableBotStatus.View = System.Windows.Forms.View.Details;
@@ -146,12 +136,12 @@
             // 
             // btnRestart
             // 
-            this.btnRestart.Location = new System.Drawing.Point(881, 94);
+            this.btnRestart.Location = new System.Drawing.Point(1166, 119);
             this.btnRestart.Margin = new System.Windows.Forms.Padding(4);
             this.btnRestart.Name = "btnRestart";
             this.btnRestart.Size = new System.Drawing.Size(112, 34);
             this.btnRestart.TabIndex = 12;
-            this.btnRestart.Text = "Restart";
+            this.btnRestart.Text = "Reset";
             this.btnRestart.UseVisualStyleBackColor = true;
             this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
             // 
@@ -206,37 +196,29 @@
             0,
             0,
             0});
+            this.NumericBotCount.ValueChanged += new System.EventHandler(this.NumericBotCount_ValueChanged);
             // 
             // CheckHasPlayer
             // 
             this.CheckHasPlayer.AutoSize = true;
-            this.CheckHasPlayer.Location = new System.Drawing.Point(1165, 63);
+            this.CheckHasPlayer.Location = new System.Drawing.Point(1168, 63);
             this.CheckHasPlayer.Name = "CheckHasPlayer";
             this.CheckHasPlayer.Size = new System.Drawing.Size(110, 23);
             this.CheckHasPlayer.TabIndex = 17;
-            this.CheckHasPlayer.Text = "Has Player?";
+            this.CheckHasPlayer.Text = "Has player?";
             this.CheckHasPlayer.UseVisualStyleBackColor = true;
+            this.CheckHasPlayer.CheckedChanged += new System.EventHandler(this.CheckHasPlayer_CheckedChanged);
             // 
             // GroupDisplay
             // 
             this.GroupDisplay.Controls.Add(this.CheckShowObstacleBorder);
             this.GroupDisplay.Controls.Add(this.CheckShowDeadSnake);
-            this.GroupDisplay.Location = new System.Drawing.Point(881, 361);
+            this.GroupDisplay.Location = new System.Drawing.Point(878, 386);
             this.GroupDisplay.Name = "GroupDisplay";
-            this.GroupDisplay.Size = new System.Drawing.Size(394, 221);
+            this.GroupDisplay.Size = new System.Drawing.Size(394, 92);
             this.GroupDisplay.TabIndex = 18;
             this.GroupDisplay.TabStop = false;
             this.GroupDisplay.Text = "Display";
-            // 
-            // CheckShowDeadSnake
-            // 
-            this.CheckShowDeadSnake.AutoSize = true;
-            this.CheckShowDeadSnake.Location = new System.Drawing.Point(6, 26);
-            this.CheckShowDeadSnake.Name = "CheckShowDeadSnake";
-            this.CheckShowDeadSnake.Size = new System.Drawing.Size(159, 23);
-            this.CheckShowDeadSnake.TabIndex = 19;
-            this.CheckShowDeadSnake.Text = "Show dead snake?";
-            this.CheckShowDeadSnake.UseVisualStyleBackColor = true;
             // 
             // CheckShowObstacleBorder
             // 
@@ -250,11 +232,47 @@
             this.CheckShowObstacleBorder.Text = "Show obstacle border?";
             this.CheckShowObstacleBorder.UseVisualStyleBackColor = true;
             // 
+            // CheckShowDeadSnake
+            // 
+            this.CheckShowDeadSnake.AutoSize = true;
+            this.CheckShowDeadSnake.Location = new System.Drawing.Point(6, 26);
+            this.CheckShowDeadSnake.Name = "CheckShowDeadSnake";
+            this.CheckShowDeadSnake.Size = new System.Drawing.Size(159, 23);
+            this.CheckShowDeadSnake.TabIndex = 19;
+            this.CheckShowDeadSnake.Text = "Show dead snake?";
+            this.CheckShowDeadSnake.UseVisualStyleBackColor = true;
+            // 
+            // CheckStartPlayerSnake
+            // 
+            this.CheckStartPlayerSnake.Checked = true;
+            this.CheckStartPlayerSnake.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckStartPlayerSnake.Location = new System.Drawing.Point(881, 93);
+            this.CheckStartPlayerSnake.Name = "CheckStartPlayerSnake";
+            this.CheckStartPlayerSnake.Size = new System.Drawing.Size(165, 27);
+            this.CheckStartPlayerSnake.TabIndex = 21;
+            this.CheckStartPlayerSnake.Text = "Move player snake";
+            this.CheckStartPlayerSnake.UseVisualStyleBackColor = true;
+            this.CheckStartPlayerSnake.CheckedChanged += new System.EventHandler(this.CheckStartPlayerSnake_CheckedChanged);
+            // 
+            // CheckStartBotSnake
+            // 
+            this.CheckStartBotSnake.Checked = true;
+            this.CheckStartBotSnake.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckStartBotSnake.Location = new System.Drawing.Point(881, 126);
+            this.CheckStartBotSnake.Name = "CheckStartBotSnake";
+            this.CheckStartBotSnake.Size = new System.Drawing.Size(153, 27);
+            this.CheckStartBotSnake.TabIndex = 22;
+            this.CheckStartBotSnake.Text = "Move bot snake";
+            this.CheckStartBotSnake.UseVisualStyleBackColor = true;
+            this.CheckStartBotSnake.CheckedChanged += new System.EventHandler(this.CheckStartBotSnake_CheckedChanged);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1290, 871);
+            this.Controls.Add(this.CheckStartBotSnake);
+            this.Controls.Add(this.CheckStartPlayerSnake);
             this.Controls.Add(this.GroupDisplay);
             this.Controls.Add(this.CheckHasPlayer);
             this.Controls.Add(this.NumericBotCount);
@@ -264,8 +282,7 @@
             this.Controls.Add(this.btnRestart);
             this.Controls.Add(this.TableBotStatus);
             this.Controls.Add(this.NumericSpeed);
-            this.Controls.Add(this.btnFindPath);
-            this.Controls.Add(this.btnStartSnakeMoving);
+            this.Controls.Add(this.btnStartSnake);
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormMain";
@@ -281,9 +298,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnStartSnakeMoving;
+        private System.Windows.Forms.Button btnStartSnake;
         private System.Windows.Forms.Timer MainTimer;
-        private System.Windows.Forms.Button btnFindPath;
         private System.Windows.Forms.NumericUpDown NumericSpeed;
         private System.Windows.Forms.ListView TableBotStatus;
         private System.Windows.Forms.ColumnHeader colNumber;
@@ -299,6 +315,8 @@
         private System.Windows.Forms.GroupBox GroupDisplay;
         private System.Windows.Forms.CheckBox CheckShowDeadSnake;
         private System.Windows.Forms.CheckBox CheckShowObstacleBorder;
+        private System.Windows.Forms.CheckBox CheckStartPlayerSnake;
+        private System.Windows.Forms.CheckBox CheckStartBotSnake;
     }
 }
 

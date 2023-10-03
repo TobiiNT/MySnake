@@ -28,9 +28,6 @@ namespace GameCore.Entities.Implements.Games
 
         public CellType[,] GetMatrix() => Matrix;
 
-
-        private const int SLEEP_DURATION = 1;
-
         public Map(int Rows, int Columns)
         {
             this.Width = Rows;
@@ -56,7 +53,7 @@ namespace GameCore.Entities.Implements.Games
                     Snake.Move();
                 }
 
-                Thread.Sleep(SLEEP_DURATION);
+                Thread.Sleep(10);
             }
         }
 
