@@ -19,7 +19,7 @@ namespace GameCore.Entities.Implements.Games
         private MapLoader MapLoader { set; get; }
         public int Width { get; }
         public int Height { get; }
-        private CellType[,] Matrix { set; get; }
+        public CellType[,] Matrix { private set; get; }
         public List<Obstacle> Obstacles { private set; get; }
         public List<IFood> Foods { private set; get; }
 
