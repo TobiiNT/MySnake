@@ -14,6 +14,7 @@ namespace GameCore.Entities.Interfaces.Snakes
         ISnakeBody Head { get; }
         ISnakeBody Tail { get; }
         List<ISnakeBody> Bodies { get; }
+        ISnakeHealth Health { get; }
         int Length { get; }
         SnakeState State { get; }
         bool IsMoving { get; }
@@ -24,7 +25,7 @@ namespace GameCore.Entities.Interfaces.Snakes
         void ChangeState(SnakeState State);
         void ChangeSpeed(int Speed);
         void ChangeDirection(Direction Direction);
-        void Move();
+        void Move(IMatrix Matrix);
         void Die();
 
         int PendingBodies { get; }

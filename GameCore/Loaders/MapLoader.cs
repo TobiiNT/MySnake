@@ -25,7 +25,7 @@ namespace GameCore.Loaders
                 {
                     for (int Column = 0; Column < MapWidth; Column++)
                     {
-                        if (Reader.Read() == 49 || Row == 0 || Column == 0 || Row == MapHeight - 1 || Column == MapWidth - 1)
+                        if (Reader.Read() == 49)
                         {
                             Objects.Add(new Obstacle(Column, Row));
                         }

@@ -50,7 +50,7 @@ namespace GameCore.Entities.Implements.Games
             {
                 foreach (var Snake in this.SnakeList.ToList())
                 {
-                    Snake.Move();
+                    Snake.Move(this);
                 }
 
                 Thread.Sleep(10);
@@ -86,14 +86,14 @@ namespace GameCore.Entities.Implements.Games
         }
         public CellType GetCellType(Point Cell)
         {
-            if (Cell == null || Cell.X >= Matrix.GetLength(0) || Cell.Y >= Matrix.GetLength(1))
+            if (Cell == null || Cell.X >= this.Width || Cell.Y >= this.Height)
                 return CellType.OBSTACLE;
             return Matrix[Cell.X, Cell.Y];
         }
 
         private void SetCellValue(Point Cell, CellType Type)
         {
-            if (Cell == null || Cell.X < 0 || Cell.Y < 0 || Cell.X >= Matrix.GetLength(0) || Cell.Y >= Matrix.GetLength(1))
+            if (Cell == null || Cell.X < 0 || Cell.Y < 0 || Cell.X >= this.Width || Cell.Y >= this.Height)
                 throw new IndexOutOfRangeException();
 
             Matrix[Cell.X, Cell.Y] = Type;
@@ -134,7 +134,7 @@ namespace GameCore.Entities.Implements.Games
 
         public Snake NewSnake(Point Position, Direction Direction, Color BodyColor, ISnakeController Controller)
         {
-            Snake NewSnake = new Snake(Position.X, Position.Y, Direction, 3);
+            Snake NewSnake = new Snake(Position.X, Position.Y, Direction, 3, 100, 500);
             NewSnake.SetColor(Color.Black, BodyColor);
             NewSnake.SetController(Controller);
 
@@ -177,24 +177,30 @@ namespace GameCore.Entities.Implements.Games
             if (e is OnSnakeMoving MoveEvent)
             {
                 ISnake CurrentSnake = MoveEvent.Snake;
-
+                
+                // When the snake moves, decrease its health by 1.
+                CurrentSnake.Health.Decrease(1);
+              
                 CellType HeadPosition = GetCellType(CurrentSnake.Head.Position);
 
                 ChangeCell(MoveEvent.LastTailPosition, CellType.EMPTY);
                 ChangeCells(CurrentSnake.Bodies.Select(i => i.Position).ToList(), CellType.OBSTACLE);
 
+                bool IsCollide = HeadPosition == CellType.OBSTACLE;
+                bool IsDead = CurrentSnake.Health.RemainHealth <= 0;
 
-                if (HeadPosition == CellType.OBSTACLE) //đụng vật cản
-                {
-                    CurrentSnake.Die();
-                }
-                else if (HeadPosition == CellType.FOOD)
+                if (HeadPosition == CellType.FOOD)
                 {
                     foreach (IFood Food in Foods.Where(f => f.Position == CurrentSnake.Head.Position).ToList())
                     {
                         SnakeEatFood(CurrentSnake, Food);
                         AddNewFood();
                     }
+                }
+                else if (IsDead || IsCollide)
+                {
+                    CurrentSnake.Die();
+                    if (IsCollide) ChangeCell(CurrentSnake.Head.Position, CellType.OBSTACLE);
                 }
             }
         }

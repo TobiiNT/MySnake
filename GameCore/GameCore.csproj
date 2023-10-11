@@ -52,6 +52,7 @@
     <Compile Include="Entities\Implements\Controllers\AlmightyMoveController.cs" />
     <Compile Include="Entities\Implements\Controllers\BfsController.cs" />
     <Compile Include="Entities\Implements\Controllers\PlayerController.cs" />
+    <Compile Include="Entities\Implements\Snakes\SnakeHealth.cs" />
     <Compile Include="Entities\Interfaces\Algorithms\IHasPathAlgorithm.cs" />
     <Compile Include="Entities\Interfaces\Games\IFood.cs" />
     <Compile Include="Entities\Interfaces\Games\IMatrix.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Entities\Interfaces\Games\IGameObject.cs" />
     <Compile Include="Entities\Implements\Games\Map.cs" />
     <Compile Include="Entities\Implements\Snakes\Snake.cs" />
+    <Compile Include="Entities\Interfaces\Snakes\ISnakeHealth.cs" />
     <Compile Include="Events\Interfaces\ISnakeEvent.cs" />
     <Compile Include="Events\OnSnakeLengthChanged.cs" />
     <Compile Include="Events\OnSnakeDied.cs" />
@@ -77,6 +79,8 @@
     <Compile Include="Utilities\DataStructures\PriorityQueue.cs" />
     <Compile Include="Utilities\Randomizer.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Entities\Implements\Algorithms\NeuralNetworks\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

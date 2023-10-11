@@ -1,6 +1,7 @@
 ﻿using GameCore.Entities.Enums;
 using GameCore.Entities.Implements.Games;
 using GameCore.Entities.Interfaces.Controllers;
+using GameCore.Entities.Interfaces.Games;
 using GameCore.Entities.Interfaces.Snakes;
 using GameCore.Events;
 using System;
@@ -18,6 +19,8 @@ namespace GameCore.Entities.Implements.Snakes
         public ISnakeBody Tail => Bodies[Length - 1];
 
         public List<ISnakeBody> Bodies { private set; get; }
+
+        public ISnakeHealth Health { private set; get; }
 
         public int Length => this.Bodies.Count;
 
@@ -53,7 +56,7 @@ namespace GameCore.Entities.Implements.Snakes
 
         public event EventHandler<EventArgs> OnDisposed;
 
-        public Snake(int X, int Y, Direction Direction, int StartLength)
+        public Snake(int X, int Y, Direction Direction, int StartLength, int InitHealth, int MaxHealth)
         {
             this.Bodies = new List<ISnakeBody>();
             this.State = SnakeState.IDLE;
@@ -73,6 +76,8 @@ namespace GameCore.Entities.Implements.Snakes
                 }
                 this.Bodies.Add(new SnakeBody(this, X, Y));
             }
+
+            this.Health = new SnakeHealth(InitHealth, MaxHealth);
         }
 
         public void SetColor(Color Border, Color Body)
@@ -116,7 +121,7 @@ namespace GameCore.Entities.Implements.Snakes
             this.State = State;
         }
 
-        public void Move()
+        public void Move(IMatrix Matrix)
         {
             if (State != SnakeState.MOVING) return;
             if (this.LastMoveTime.AddMilliseconds(this.MoveSpeed) > DateTime.Now) return;
@@ -126,10 +131,10 @@ namespace GameCore.Entities.Implements.Snakes
             if (this.Controller != null)
             {
                 Direction NextDirection = this.Controller.GetNextMove(this);
-                
+
                 this.ChangeDirection(NextDirection);
             }
-          
+
             Point LastTailPosition = this.Tail.Position;
             for (int i = Length - 1; i > 0; i--)
             {
@@ -137,15 +142,31 @@ namespace GameCore.Entities.Implements.Snakes
                 ISnakeBody NextPart = this.Bodies[i - 1];
                 Part.MoveTo(NextPart.Position);
             }
+
+            int NewX = this.Head.Position.X;
+            int NewY = this.Head.Position.Y;
             if (this.Direction == Direction.LEFT)
-                this.Head.MoveTo(new Point(this.Head.Position.X - 1, this.Head.Position.Y));
+            {
+                NewX--;
+                if (NewX < 0) NewX = Matrix.Width - 1;
+            }
             else if (this.Direction == Direction.RIGHT)
-                this.Head.MoveTo(new Point(this.Head.Position.X + 1, this.Head.Position.Y));
-            else if(this.Direction == Direction.UP)
-                this.Head.MoveTo(new Point(this.Head.Position.X, this.Head.Position.Y - 1));
+            {
+                NewX++;
+                if (NewX >= Matrix.Width) NewX = 0;
+            }
+            else if (this.Direction == Direction.UP)
+            {
+                NewY--;
+                if (NewY < 0) NewY = Matrix.Height - 1;
+            }
             else if (this.Direction == Direction.DOWN)
-                this.Head.MoveTo(new Point(this.Head.Position.X, this.Head.Position.Y + 1));
-         
+            {
+                NewY++;
+                if (NewY >= Matrix.Height) NewY = 0;
+            }
+            this.Head.MoveTo(new Point(NewX, NewY));
+
             if (PendingBodies > 0)
             {
                 PendingBodies--;

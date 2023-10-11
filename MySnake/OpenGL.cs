@@ -37,6 +37,7 @@ namespace MySnake
 
         public void DrawObject(IGameObject Object)
         {
+            if (Object == null) return;
             DrawRectangle(Object.Position.X, Object.Position.Y, Object.Size, Object.Size, Object.FillColor);
         }
 

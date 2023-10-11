@@ -23,6 +23,7 @@ namespace GameCore.Entities.Implements.Games
         public void ApplyEffect(ISnake Snake)
         {
             Snake.AddLength(1);
+            Snake.Health.Increase(100);
         }
 
         public void Dispose()

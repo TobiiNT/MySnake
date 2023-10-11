@@ -84,9 +84,9 @@ namespace MySnake
             }
             if (this.CheckShowObstacleBorder.Checked)
             {
-                for (int i = 0; i < Map.GetMatrix().GetLength(0); i++)
+                for (int i = 0; i < Map.Width; i++)
                 {
-                    for (int j = 0; j < Map.GetMatrix().GetLength(1); j++)
+                    for (int j = 0; j < Map.Height; j++)
                     {
                         if (Map.GetCellType(new Point(i, j)) == CellType.OBSTACLE)
                             OpenGL.DrawObject(new Obstacle(i, j));
